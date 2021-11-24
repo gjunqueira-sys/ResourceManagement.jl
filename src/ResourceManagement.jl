@@ -13,6 +13,10 @@ using Dates
 import Base.:+
 import Statistics
 
+# exports
+export DisciplineLabor
+
+
 
 # Abstract class for all resource modules
 abstract type ResourceVariable end
@@ -20,19 +24,6 @@ abstract type ResourceVariable end
 abstract type LaborVariable <: ResourceVariable end
 
 
-
-"""
-    +(x::DisciplineLabor , y::DisciplineLabor)
-
-Adds two labor variables together.
-
-# Arguments
-- `x::DisciplineLabor`: The first labor variable to be added
-- `y::DisciplineLabor`: The second labor variable to be added
-"""
-function Base.:+(x::DisciplineLabor , y::DisciplineLabor)
-    _TeamBuilder(x , y)
-end
 
 
 
@@ -42,13 +33,13 @@ end
 
 
 # Fields
-- `Rate::Float `: stores the rate for the labor variable
-- `BudgetHours::Float`: stores budget for the resource in hours
-- `BudgetDollars::Float`: stores budget for the resource in Dollars
-- `TravelBudgetDollars::Float`: stores budget for Travel in Dollars
-- `ActualHours::Float `: stores actual incurred hours for resource
-- `ActualHours::Float `: stores actual incurred hours for resource
-- `ActualIncurredCost::Float`: stores actual incurred Costs
+- `Rate::Float64 `: stores the rate for the labor variable
+- `BudgetHours::Float64`: stores budget for the resource in hours
+- `BudgetDollars::Float64`: stores budget for the resource in Dollars
+- `TravelBudgetDollars::Float64`: stores budget for Travel in Dollars
+- `ActualHours::Float64 `: stores actual incurred hours for resource
+- `ActualHours::Float64 `: stores actual incurred hours for resource
+- `ActualIncurredCost::Float64`: stores actual incurred Costs
 - `FwdHoursAvailable::Array`: stores monthly Hours Available from Present going forward
 - `FwdHoursForecast::Array`: stores Forecast monthly Hours from Present month going forward
 - `RevHoursForecast::Array`: stores Forecast monthly Hours from Present month going backwards (reverse)
@@ -62,12 +53,12 @@ end
 """
 mutable struct  DisciplineLabor <:LaborVariable 
 
-    Rate::Float                   # engineering labor rate for project
-    BudgetHours::Float          # Labor budget in LaborBudgetHours
-    BudgetDollars::Float          # Labor Budget in Dollars
-    TravelBudgetDollars::Float    # travel Budget in Dollars
-    ActualHours::Float           # Total Incurred Hours
-    ActualIncurredCost::Float     # Total Incurred Cost
+    Rate::Float64                   # engineering labor rate for project
+    BudgetHours::Float64          # Labor budget in LaborBudgetHours
+    BudgetDollars::Float64          # Labor Budget in Dollars
+    TravelBudgetDollars::Float64    # travel Budget in Dollars
+    ActualHours::Float64           # Total Incurred Hours
+    ActualIncurredCost::Float64     # Total Incurred Cost
 
 
     FwdHoursAvailable::Array        # Fwd Hours Available on a given month.
@@ -145,7 +136,37 @@ mutable struct  DisciplineLabor <:LaborVariable
         new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{Float64, 1}(undef, N),  Array{Float64, 2}(undef, N,N),  Array{Float64, 2}(undef, N,N),  Array{Float64, 2}(undef, N, N), Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N),
         Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N), Dept, Name, Array{String, 1}())
     end
+
+
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+    +(x::DisciplineLabor , y::DisciplineLabor)
+
+Adds two labor variables together.
+
+# Arguments
+- `x::DisciplineLabor`: The first labor variable to be added
+- `y::DisciplineLabor`: The second labor variable to be added
+"""
+function Base.:+(x::DisciplineLabor , y::DisciplineLabor)
+    _TeamBuilder(x , y)
+end
+
 
 
 
