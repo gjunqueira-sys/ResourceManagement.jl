@@ -154,18 +154,6 @@ end
 
 
 
-"""
-    +(x::DisciplineLabor , y::DisciplineLabor)
-
-Adds two labor variables together.
-
-# Arguments
-- `x::DisciplineLabor`: The first labor variable to be added
-- `y::DisciplineLabor`: The second labor variable to be added
-"""
-function Base.:+(x::DisciplineLabor , y::DisciplineLabor)
-    _TeamBuilder(x , y)
-end
 
 
 
