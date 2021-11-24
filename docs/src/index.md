@@ -1,5 +1,9 @@
 ```@meta
 CurrentModule = ResourceManagement
+DocTestSetup = quote
+    using ResourceManagement
+end
+
 ```
 
 # ResourceManagement
