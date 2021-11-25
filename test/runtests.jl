@@ -10,14 +10,17 @@ using Test
 
     A = DisciplineLabor();
     B = DisciplineLabor();
+    C = DisciplineLabor();
     A.BudgetHours = 160.0;
     B.BudgetHours = 200.0;
-    T = A + B;
+    C.BudgetHours = 240.0;
+    T = A + B + C;
 
     @test A.BudgetHours == 160.0;
     @test B.BudgetHours == 200.0;
+    @test C.BudgetHours == 240.0;
     
-    @test T.BudgetHours == 360.0;
+    @test T.BudgetHours == 600.0;
     
 
 

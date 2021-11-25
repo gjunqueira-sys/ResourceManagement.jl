@@ -283,6 +283,65 @@ end
 
 
 
+
+"""
+    _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
+
+Function to add two DisciplineLabor objects together.
+
+# Arguments
+- `x::TeamLabor`: TeamLabor Object to add
+- `y::DisciplineLabor`: Second DisciplineLabor object to add
+
+# Returns
+- `T::TeamLabor`: Team Labor object
+"""
+function _TeamBuilder(x::TeamLabor, y::DisciplineLabor)
+    T = x
+    
+    push!(T.Team, y)
+
+
+    # TODO: Implement add projects from y to x
+    
+    
+
+    xlen = count([isassigned(x.Projects, i) for i in 1:length(x.Projects)])
+    ylen = count([isassigned(y.Projects, i) for i in 1:length(y.Projects)])
+
+    [push!(x.Projects, y.Projects[i]) for i in 1:ylen if y.Projects[i] ∉ x.Projects];
+
+    T.Name = x.Name * " & " * y.Name
+    T.Rate = mean(x.Rate, y.Rate)
+    T.BudgetHours = x.BudgetHours + y.BudgetHours
+    T.BudgetDollars = x.BudgetDollars + y.BudgetDollars
+    T.TravelBudgetDollars = x.TravelBudgetDollars + y.TravelBudgetDollars
+    T.ActualHours = x.ActualHours + y.ActualHours
+    T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost
+
+    T.FwdHoursForecast = x.FwdHoursForecast + y.FwdHoursForecast
+    T.RevHoursForecast = x.RevHoursForecast + y.RevHoursForecast
+
+    T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast
+    T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast
+
+    T.RevActualHours = x.RevActualHours + y.RevActualHours
+    T.RevActualCostHours = x.RevActualCostHours + y.RevActualCostHours
+    
+
+
+    return T
+end    
+
+
+
+
+
+
+
+
+
+
 """
     Base.+(x::DisciplineLabor , y::DisciplineLabor)
 
@@ -302,7 +361,22 @@ end
     
 
 
+"""
+    Base.+(x::TeamLabor , y::DisciplineLabor)
 
+Extends Base.+ to add TeamLabor and DisciplineLabor together.
+
+# Arguments
+- `x::TeamLabor`: TeamLabor object to add
+- `y::DisciplineLabor`: DisciplineLabor object to add
+
+
+# Returns
+- Nothing. Function calls _TeamBuilder to add the two objects together.
+"""
+function +(x::TeamLabor , y::DisciplineLabor)
+    _TeamBuilder(x , y)
+end
 
 
 
