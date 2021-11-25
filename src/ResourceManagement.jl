@@ -10,12 +10,13 @@ using StatsBase
 using Dates
 
 # Importiong packages that will then be extended.
-import Base.:+
-import Statistics
+import Base.+
+import Statistics.mean
 
 # exports
 export DisciplineLabor
 export TeamLabor
+export mean
 
 
 
@@ -170,8 +171,6 @@ Generates a TeamLabor object.
 - `RevActualHours::Array`: stores Actual monthly Hours from Present month going backwards (reverse)
 - `RevActualCostHours::Array`: stores Actual monthly Labor cost  from Present going backwards (reverse)
 
-
-
 # Returns
 - `TeamLabor`: TeamLabor object
 
@@ -210,8 +209,22 @@ end
 
 
 
+"""
+    Statistics.mean(x::Float64, y::Float64)
 
+Extends Statistics.mean to return the mean of two numbers.
 
+# Arguments
+- `x::Float64`: First number
+- `y::Float64`: Second number
+
+# Returns
+- `Float64`: Mean of two numbers
+
+"""
+function Statistics.mean(x::Float64, y::Float64)
+    return (x + y) / 2.0
+end
 
 
 
