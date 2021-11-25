@@ -15,6 +15,7 @@ import Statistics
 
 # exports
 export DisciplineLabor
+export TeamLabor
 
 
 
@@ -144,7 +145,66 @@ end
 
 
 
+"""
+    TeamLabor()
 
+Generates a TeamLabor object.
+
+# Arguments
+- `Team::Array`: Array of DisciplineLabor objects
+- `Name::String`: Name of the Team
+- `Dept::String`: Department of the Team
+- `Rate::Float64`: Engineering Labor Rate for the Team
+- `BudgetHours::Float64`: Labor Budget in LaborBudgetHours
+- `BudgetDollars::Float64`: Labor Budget in Dollars
+- `TravelBudgetDollars::Float64`: travel Budget in Dollars
+- `ActualHours::Float64`: Total Incurred Hours
+- `ActualIncurredCost::Float64`: Total Incurred Cost
+- `Projects::Array` : Array of Projects for the Team
+- `FwdHoursAvailable::Array`: stores Fwd Hours Available on a given month.
+- `FwdHoursForecast::Array`: stores Forecast monthly Hours from Present month going forward
+- `RevHoursForecast::Array`: stores Forecast monthly Hours from Present month going backwards (reverse)
+- `RevHoursAvailable::Array`: stores Available monthly Hours from Present month going backwards (reverse)
+- `FwdCostsForecast::Array`: stores Forecasted monthly Labor cost  from Present going forward
+- `RevCostsForecast::Array`: stores Forecasted monthly Labor cost  from Present going backwards (reverse)
+- `RevActualHours::Array`: stores Actual monthly Hours from Present month going backwards (reverse)
+- `RevActualCostHours::Array`: stores Actual monthly Labor cost  from Present going backwards (reverse)
+
+
+
+# Returns
+- `TeamLabor`: TeamLabor object
+
+
+"""
+mutable struct  TeamLabor <:LaborVariable
+
+    Team::Array{DisciplineLabor, 1}
+    Name::String # name of team
+    Dept::String                        # Department for Discipline
+    Rate::Float64                   #  labor rate for team
+    BudgetHours::Float64           # Labor budget in LaborBudgetHours
+    BudgetDollars::Float64          # Labor Budget in Dollars
+    TravelBudgetDollars::Float64    # travel Budget in Dollars
+    ActualHours::Float64            # Total Incurred Hours
+    ActualIncurredCost::Float64     # Total Incurred Cost
+    Projects::Array # project name
+    FwdHoursAvailable::Array        # Fwd Hours Available on a given month.
+    FwdHoursForecast::Array         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.  
+    RevHoursForecast::Array         # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted.   
+    RevHoursAvailable::Array        # Array holding Hours Available Rev monthly (in past). Element [1] is the first month forecasted.   
+    FwdCostsForecast::Array          # Array holding costs Forecasted Fwd monthly (future)
+    RevCostsForecast::Array         # Array holding costs Forecasted Rev  monthly (past)
+    RevActualHours::Array        # Array holding Hours incurred Rev monthly (in past). Element [1] is the first month Actual Hours.
+    RevActualCostHours::Array     # Array holding Hours in Dollar Amounts incurred Rev monthly (in past)
+    
+    function TeamLabor()
+        new(Array{DisciplineLabor, 1}(),  "", "",0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{String, 1}(),Array{Float64, 1}(undef, 24), Array{Float64, 2}(undef, 24, 24),
+        Array{Float64, 2}(undef, 24 ,24), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24))
+    end
+
+
+end
 
 
 
