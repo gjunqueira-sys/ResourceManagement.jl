@@ -17,6 +17,8 @@ import Statistics.mean
 export DisciplineLabor
 export TeamLabor
 export mean
+export +
+export Statistics
 
 
 
@@ -173,8 +175,6 @@ Generates a TeamLabor object.
 
 # Returns
 - `TeamLabor`: TeamLabor object
-
-
 """
 mutable struct  TeamLabor <:LaborVariable
 
@@ -220,7 +220,6 @@ Extends Statistics.mean to return the mean of two numbers.
 
 # Returns
 - `Float64`: Mean of two numbers
-
 """
 function Statistics.mean(x::Float64, y::Float64)
     return (x + y) / 2.0
@@ -228,7 +227,79 @@ end
 
 
 
+"""
+    _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
 
+Function to add two DisciplineLabor objects together.
+
+# Arguments
+- `x::DisciplineLabor`: First DisciplineLabor object
+- `y::DisciplineLabor`: Second DisciplineLabor object to add
+
+# Returns
+- `T::TeamLabor`: Team Labor object
+"""
+function _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
+    T = TeamLabor()
+    push!(T.Team, x)
+    push!(T.Team, y)
+
+    # TODO : Implement a more elegant way to add projects. Right now, duplicate projects can be added
+    
+    # _Projects = Array{String, 1}();
+
+    xlen = count([isassigned(x.Projects, i) for i in 1:length(x.Projects)])
+    ylen = count([isassigned(y.Projects, i) for i in 1:length(y.Projects)])
+
+    [push!(T.Projects, x.Projects[i]) for i in 1:xlen if x.Projects[i] ∉ T.Projects];
+    [push!(T.Projects, y.Projects[i]) for i in 1:ylen if y.Projects[i] ∉ T.Projects];
+    
+    
+
+    T.Name = x.Name * " & " * y.Name
+    T.Rate = Statistics.mean(x.Rate, y.Rate)
+    T.BudgetHours = x.BudgetHours + y.BudgetHours
+    T.BudgetDollars = x.BudgetDollars + y.BudgetDollars
+    T.TravelBudgetDollars = x.TravelBudgetDollars + y.TravelBudgetDollars
+
+    T.ActualHours = x.ActualHours + y.ActualHours
+    T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost
+
+    T.FwdHoursAvailable = x.FwdHoursAvailable + y.FwdHoursAvailable
+    T.RevHoursAvailable = x.RevHoursAvailable + y.RevHoursAvailable
+
+    T.FwdHoursForecast = x.FwdHoursForecast + y.FwdHoursForecast
+    T.RevHoursForecast = x.RevHoursForecast + y.RevHoursForecast
+    
+    T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast
+    T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast
+
+    T.RevActualHours = x.RevActualHours + y.RevActualHours
+    T.RevActualCostHours = x.RevActualCostHours + y.RevActualCostHours
+
+
+    return T
+end
+
+
+
+"""
+    Base.+(x::DisciplineLabor , y::DisciplineLabor)
+
+Extends Base.+ to add two DisciplineLabor objects together.
+
+# Arguments
+- `x::DisciplineLabor`: First DisciplineLabor object to add
+- `y::DisciplineLabor`: Second DisciplineLabor object to add
+
+
+# Returns
+- Nothing. Function calls _TeamBuilder to add two DisciplineLabor objects together.
+"""
+function +(x::DisciplineLabor , y::DisciplineLabor)
+    _TeamBuilder(x , y)
+end
+    
 
 
 
