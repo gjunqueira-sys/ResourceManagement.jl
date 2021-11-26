@@ -1,1 +1,4 @@
-{}
+{
+    "discord.enabled": true,
+    "rpc.enabled": true
+}

@@ -19,6 +19,7 @@ export TeamLabor
 export mean
 export +
 export Statistics
+export ReadLaborTracker
 
 
 
@@ -376,6 +377,40 @@ Extends Base.+ to add TeamLabor and DisciplineLabor together.
 """
 function +(x::TeamLabor , y::DisciplineLabor)
     _TeamBuilder(x , y)
+end
+
+
+
+
+
+
+"""
+    ReadLaborTracker(fName::String)
+
+Function to read ACTUAL_PLANNED hours from SAP.
+Report should be saved in CSV format.
+Rows with missing names of resources are ignored.
+
+# Arguments
+- `fName::String`: filename of the report
+
+# Returns
+- `df::DataFrame`: DataFrame of the report
+
+# Example:
+
+```julia
+    df = ReadLaborTracker("C:\\Users\\james\\Desktop\\labor_tracker.csv")
+```
+
+"""
+function ReadLaborTracker(fName::String)
+    
+    df = CSV.read(fName, DataFrame)
+    df = dropmissing(df, :"Employee Name");
+
+    
+    return df;
 end
 
 
