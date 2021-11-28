@@ -21,6 +21,7 @@ export +
 export Statistics
 export ReadLaborTracker
 export _getEmployeePlannedHours
+export fetchAndWritePlannedHours!
 
 
 
@@ -465,6 +466,59 @@ function _pad_zerosEnd(v, n)
     return v
 end
 
+
+
+
+
+
+
+
+"""
+    fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable)
+
+Function to fetch planned hours from ACTUAL_PLANNED SAP report 
+for a given Employee name and number of months.
+Function will then save information to the LaborVariable object.
+LaborVariable.FwdHoursForecast[1] will hold the current month.
+ 
+# Arguments
+- `df::DataFrame`: df labor DataFrame
+- `name::String`: Name of Employee
+- `m::Int`: number of months to fetch and save
+- `D::LaborVariable`: LaborVariable object to save information to
+
+# Returns
+- `vh`: Array of vectors with Planned Hours for each month for projects
+- `pv`: Array of vectors with Projects
+- `D::LaborVariable` : LaborVariable object with the updated information.
+
+# Throws
+- `undefined Projects`: if projects do not match or are not found.
+"""
+function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable)
+
+    vh, pv = getEmployeePlannedHours(df, name, m)
+    l = length(D.FwdHoursForecast); #number of months in the DisciplineLabor object
+    pvu = unique(pv);
+    
+    try
+        
+        [push!(D.Projects, pvu[i]) for i in 1:length(pvu) if pvu[i] ∉ D.Projects];
+    catch
+        @warn("undefined Projects")
+    end
+    
+    for m in 1:length(vh)
+        for i in enumerate(unique(pv))
+            
+            D.FwdHoursForecast[m, i[1]] = sum(vh[m][pv .== i[2]])
+            # push!(t, sum(V[m][pv .== p]))
+        end
+    
+    end
+    
+    return vh, unique(pv), D
+end
 
 
 
