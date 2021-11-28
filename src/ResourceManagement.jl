@@ -22,6 +22,7 @@ export Statistics
 export ReadLaborTracker
 export _getEmployeePlannedHours
 export fetchAndWritePlannedHours!
+export getFwdPlannedHours
 
 
 
@@ -497,7 +498,7 @@ LaborVariable.FwdHoursForecast[1] will hold the current month.
 """
 function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable)
 
-    vh, pv = getEmployeePlannedHours(df, name, m)
+    vh, pv = _getEmployeePlannedHours(df, name, m)
     l = length(D.FwdHoursForecast); #number of months in the DisciplineLabor object
     pvu = unique(pv);
     
@@ -519,6 +520,44 @@ function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::Labo
     
     return vh, unique(pv), D
 end
+
+
+
+
+
+"""
+    getFwdPlannedHours(D::LaborVariable, proj::String)
+
+Function to get planned hours for a given project from a LaborVariable object.
+
+# Arguments
+- `D::LaborVariable`: LaborVariable object to get information from
+- `proj::String`: Project to get information for. If no project is given ("") or found,
+    function will return all projects.
+
+# Returns
+- `v::Vector`: Vector with planned hours for the project
+
+# Throws
+- `NotFoundError`: I guess we could throw an error if `val` isn't found.
+"""
+function getFwdPlannedHours(D::LaborVariable, proj::String)
+    v=[]
+    if (proj ∉  D.Projects)
+
+        for i in 1:length(D.FwdHoursForecast[:,1])
+
+            x = sum(D.FwdHoursForecast[i,:])
+            push!(v, x)
+        end
+        
+    else 
+        v = D.FwdHoursForecast[:, findfirst(x ->x == proj, D.Projects)]
+    end
+    
+    return v
+end
+
 
 
 
