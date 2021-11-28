@@ -416,9 +416,6 @@ end
 
 
 
-
-
-
 """
     _getEmployeePlannedHours(df::DataFrame, name::String, m::Int)
 
@@ -444,19 +441,33 @@ function _getEmployeePlannedHours(df::DataFrame, name::String, m::Int)
     startcol = 9; #column where first planned hours are
 
     filter = (df."Employee Name").==name
-    
     df = df[filter,:]
-
     cols = [startcol+3*cols for cols in 0: m-1]
     p = df[:,2]; # vector with employee Projects
-
-    
-    
-
     v = [(collect(df[:,cols[i]])) for i in 1: length(cols)]
 
     return v, p
 end
+
+
+
+
+"""
+Function to pad vector from the end with zeroes.
+Parameters:
+    v: vector to pad
+    n: number of zeroes to pad
+"""
+function _pad_zerosEnd(v, n)
+    if n > length(v)
+        v = [v; zeros(n - length(v),1)]
+    end
+    return v
+end
+
+
+
+
 
 
 
