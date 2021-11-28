@@ -20,6 +20,7 @@ export mean
 export +
 export Statistics
 export ReadLaborTracker
+export _getEmployeePlannedHours
 
 
 
@@ -413,6 +414,49 @@ function ReadLaborTracker(fName::String)
     return df;
 end
 
+
+
+
+
+
+"""
+    _getEmployeePlannedHours(df::DataFrame, name::String, m::Int)
+
+    Function to filter df by Employee name. 
+
+# Arguments
+- `df::DataFrame`: dataframe of report (output of ReadLaborTracker)
+- `name::String`: name of employee (need to match sap name)
+- `m::Int`: number of months
+
+# Returns
+- `v::Vector`: Vector with the hours for each month
+- `p:: Vector`: Vector with employee's projects
+
+# Example:
+
+```julia
+    vh, pv = getEmployeePlannedHours(dflabor, "Doe John", 24)
+```
+
+"""
+function _getEmployeePlannedHours(df::DataFrame, name::String, m::Int)
+    startcol = 9; #column where first planned hours are
+
+    filter = (df."Employee Name").==name
+    
+    df = df[filter,:]
+
+    cols = [startcol+3*cols for cols in 0: m-1]
+    p = df[:,2]; # vector with employee Projects
+
+    
+    
+
+    v = [(collect(df[:,cols[i]])) for i in 1: length(cols)]
+
+    return v, p
+end
 
 
 
