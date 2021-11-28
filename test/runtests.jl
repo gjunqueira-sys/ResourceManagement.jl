@@ -38,7 +38,12 @@ using Test
     @test p[5] == "IND-43";
     @test p[6] == "NZ430300";
     @test length(p) == 6;
-    
+
+    Tony = DisciplineLabor("430300", "Higa Anthony",  24);
+    V1, p1 = fetchAndWritePlannedHours!(dflabor, "HIGA ANTHONY", 24, Tony);
+
+    @test sum(getFwdPlannedHours(Tony, "")) == 1446;
+    @test sum(getFwdPlannedHours(Tony, "153804")) == 240.0
     
 
 
