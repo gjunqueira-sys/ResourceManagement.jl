@@ -22,7 +22,24 @@ using Test
     
     @test T.BudgetHours == 600.0;
     
+    dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
+    @test size(dflabor) == (91, 79);
 
+
+    vh, pv = _getEmployeePlannedHours(dflabor, "HIGA ANTHONY", 24);
+    
+    @test sum(sum.(vh)) == 1446
+
+    p=unique(pv);
+    @test p[1] == "152242";
+    @test p[2] == "153804";
+    @test p[3] == "154558";
+    @test p[4] == "154662";
+    @test p[5] == "IND-43";
+    @test p[6] == "NZ430300";
+    @test length(p) == 6;
+    
+    
 
 
     
