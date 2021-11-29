@@ -14,15 +14,14 @@ import Base.+
 import Statistics.mean
 
 # exports
-export DisciplineLabor
-export TeamLabor
-export mean
+export DisciplineLabor, TeamLabor
 export +
-export Statistics
-export ReadLaborTracker
-export _getEmployeePlannedHours
-export fetchAndWritePlannedHours!
-export getFwdPlannedHours
+export Statistics, mean
+export ReadLaborTracker, ReadAvailHours
+export _getEmployeePlannedHours, fetchAndWritePlannedHours!, getFwdPlannedHours
+
+
+
 
 
 
@@ -538,8 +537,6 @@ Function to get planned hours for a given project from a LaborVariable object.
 # Returns
 - `v::Vector`: Vector with planned hours for the project
 
-# Throws
-- `NotFoundError`: I guess we could throw an error if `val` isn't found.
 """
 function getFwdPlannedHours(D::LaborVariable, proj::String)
     v=[]
@@ -555,6 +552,75 @@ function getFwdPlannedHours(D::LaborVariable, proj::String)
         v = D.FwdHoursForecast[:, findfirst(x ->x == proj, D.Projects)]
     end
     
+    return v
+end
+
+
+
+
+"""
+    ReadAvailHours(fName::String)
+
+Function to read Available hours on a given month from SAP.
+Report should be saved in CSV format.
+YLF_UTIL_DEPT is used to pull available hours from.
+Since SAP report only goes fwd 12 months, spreadhsheet can be 
+edited to include avail hours beyond 12 months.
+
+# Arguments
+- `fName::String`: filename of the report
+
+# Returns
+- `df::DataFrame`: DataFrame of the report
+
+# Example:
+
+```julia
+    df = ReadAvailHours("C:\\Users\\james\\Desktop\\labor_tracker.csv")
+```
+
+"""
+function ReadAvailHours(fName::String)
+    
+    df = CSV.read(fName, DataFrame)
+        
+    return df;
+end
+
+
+
+
+
+"""
+    getAvailMonthHours(df::DataFrame,  m::Int)
+
+Function to read Available hours for each month from SAP.
+Report should be saved in CSV format.
+YLF_UTIL_DEPT is used to pull available hours from.
+Pick one resource and run report to get the hours for each month.
+SAP report only goes fwd 12 months, spreadhsheet can be
+edited to include avail hours beyond 12 months.
+
+# Arguments
+- `fName::String`: filename of the report
+
+# Returns
+- `v::Vector`: Vector with available hours for each month.  Pos [1] is current month.
+
+# Example:
+
+```julia
+    V = getAvailMonthHours("C:\\Users\\james\\Desktop\\UTILREPORT_NOV.csv")
+```
+
+"""
+function getAvailMonthHours(df::DataFrame,  m::Int)
+
+    startcol = 6; #column where first planned hours are
+    df = df;
+    cols = [startcol+3*cols for cols in 0: m-1]
+    v = [(collect(df[:,cols[i]])) for i in 1: length(cols)]
+
     return v
 end
 
