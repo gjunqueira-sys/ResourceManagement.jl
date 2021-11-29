@@ -17,7 +17,7 @@ import Statistics.mean
 export DisciplineLabor, TeamLabor
 export +
 export Statistics, mean
-export ReadLaborTracker, ReadAvailHours
+export ReadLaborTracker, ReadAvailHours, getAvailMonthHours, writeAvailableFwdHours!
 export _getEmployeePlannedHours, fetchAndWritePlannedHours!, getFwdPlannedHours
 
 
@@ -624,6 +624,33 @@ function getAvailMonthHours(df::DataFrame,  m::Int)
     return v
 end
 
+
+
+
+
+"""
+    writeAvailableFwdHours!(V::Vector, D::LaborVariable)
+
+Function will take an Array of Floats containing available monthly hours and 
+and a LaborVariable and write the available hours to the LaborVariable FwdHoursAvailable field.
+This is a mutable function.
+
+# Arguments
+- `V::Vector`: Vector from getAvailMonthHours
+- `D::LaborVariable`: LaborVariable object to write to
+
+"""
+function writeAvailableFwdHours!(V::Vector, D::LaborVariable)
+    if length(V) == length(D.FwdHoursAvailable)
+        D.FwdHoursAvailable = V
+        
+    else
+        println("""
+        Error:
+        Vector length does not match LaborVariable length.
+        """)
+    end
+end
 
 
 
