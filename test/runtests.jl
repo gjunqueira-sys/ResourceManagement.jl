@@ -26,12 +26,15 @@ p=unique(pv);
 
 writeAvailableFwdHours!(Tony, dfAvail, 24);
 
-TU = getUtilization(Tony, "");
+
 Vp = getFwdPlannedHours(Tony, "", V1);
 Vp1 = getFwdPlannedHours(Tony, "153804", V1);
 Vp2 = getFwdPlannedHours(Tony, "154558", V1);
 Va = Tony.FwdHoursAvailable;
 
+TU1 = getUtilization(Tony, "", V1);
+TU2 = getUtilization(Tony, "153804", V1);
+TU3 = getUtilization(Tony, "154558", V1);
 
 
 @testset "ResourceManagement.jl" begin
@@ -67,14 +70,18 @@ Va = Tony.FwdHoursAvailable;
     @test length(p) == 6;
 
     
-
+    
     @test sum(getFwdPlannedHours(Tony, "", V1)) == 1446;
     @test sum(getFwdPlannedHours(Tony, "153804", V1)) == 240.0
     @test sum(getFwdPlannedHours(Tony, "154558", V1)) == 200.0
 
+    @test  sum(Va .*(getUtilization(Tony, "", V1)))[1] == 1446;
+
     
     
     @test sum(Tony.FwdHoursAvailable)[1] == 4016
+
+
 
     
 

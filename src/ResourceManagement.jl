@@ -669,6 +669,7 @@ If  the given project is not found, function will return utilization for all pro
 - `D::LaborVariable`: LaborVariable object to get information from
 - `proj::String`: Project to get information for. If no project is given ("") or found,
     function will return all projects.
+- TODO: `V::Vector`: Vector with utilization for the project (TOO DEPENDANT ON OTHER FUNCTION)
 
 # Returns
 - `v::Vector`: Vector with utilization (percent) for the project
@@ -679,26 +680,23 @@ If  the given project is not found, function will return utilization for all pro
     V = getUtilization(JohnDoe, "")
 ```
 """
-function getUtilization(D::LaborVariable, proj::String)
+function getUtilization(D::LaborVariable, proj::String, V::Vector)
     v=[];
-    Vf = D.FwdHoursForecast;
+    Vf = V;
     Vavail = D.FwdHoursAvailable;
     if (proj ∉  D.Projects)
-        for i in 1:length(Vf[:,1])
-            x = sum(Vf[i,:])/sum(Vavail[i,:])
+        for i in 1:length(Vf)
+            x = sum(Vf[i])/sum(Vavail[i])
             push!(v, x)
         end
         
     else 
-        v = Vf[:, findfirst(x ->x == proj, D.Projects)]/Vavail[:, findfirst(x ->x == proj, D.Projects)]
+        for i in 1: length(V)
+            v = push!(v, Vf[i][findfirst(x ->x == proj, D.Projects)] / sum(Vavail[i]))
+        end
     end
 
     return v
-
-
-
-
-
 
 end
 
