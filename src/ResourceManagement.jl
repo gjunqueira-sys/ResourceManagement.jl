@@ -539,18 +539,22 @@ Function to get planned hours for a given project from a LaborVariable object.
 - `v::Vector`: Vector with planned hours for the project
 
 """
-function getFwdPlannedHours(D::LaborVariable, proj::String)
+function getFwdPlannedHours(D::LaborVariable, proj::String, V::Vector)
     v=[]
     if (proj ∉  D.Projects)
 
-        for i in 1:length(D.FwdHoursForecast[:,1])
+        for i in 1:length(V)
 
-            x = sum(D.FwdHoursForecast[i,:])
+            x = sum(V[i])
             push!(v, x)
         end
         
-    else 
-        v = D.FwdHoursForecast[:, findfirst(x ->x == proj, D.Projects)]
+    else
+        for i in 1:length(V)
+            v = push!(v, V[i][findfirst(x ->x == proj, D.Projects)])
+        end
+
+        
     end
     
     return v
@@ -593,7 +597,7 @@ end
 
 
 """
-    getAvailMonthHours(df::DataFrame,  m::Int)
+    _getAvailMonthHours(df::DataFrame,  m::Int)
 
 Function to read Available hours for each month from DataFrame.
 
@@ -610,7 +614,7 @@ Function to read Available hours for each month from DataFrame.
 ```
 
 """
-function getAvailMonthHours(df::DataFrame,  m::Int)
+function _getAvailMonthHours(df::DataFrame,  m::Int)
 
     startcol = 6; #column where first planned hours are
     df = df;
@@ -625,18 +629,22 @@ end
 
 
 """
-    writeAvailableFwdHours!(V::Vector, D::LaborVariable)
+    writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int)
 
 Function will take an Array of Floats containing available monthly hours and 
 and a LaborVariable and write the available hours to the LaborVariable FwdHoursAvailable field.
 This is a mutable function.
 
 # Arguments
-- `V::Vector`: Vector (output from getAvailMonthHours)
 - `D::LaborVariable`: LaborVariable object to write to
+- `df::DataFrame`: DataFrame (output of ReadAvailHours)
+- `m::Int`: number of months to write to
 
 """
-function writeAvailableFwdHours!(V::Vector, D::LaborVariable)
+function writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int)
+
+    V = _getAvailMonthHours(df, m)
+
     if length(V) == length(D.FwdHoursAvailable)
         D.FwdHoursAvailable = V
         
