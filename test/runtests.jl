@@ -9,14 +9,26 @@ A.BudgetHours = 160.0;
 B.BudgetHours = 200.0;
 C.BudgetHours = 240.0;
 T = A + B + C;
-dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
+# dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
+dflabor = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_PLANNED_FWD24_NOV.csv"); 
+
+
 vh, pv = _getEmployeePlannedHours(dflabor, "HIGA ANTHONY", 24);
 Tony = DisciplineLabor("430300", "Higa Anthony",  24);
 V1, p1 = fetchAndWritePlannedHours!(dflabor, "HIGA ANTHONY", 24, Tony);
-dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
+
+# dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
+dfAvail = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\UTILREPORT_FWD_NOV.csv");
+
+
 Vc = getAvailMonthHours(dfAvail, 24);
 p=unique(pv);
 
+writeAvailableFwdHours!(Vc, Tony);
+
+TU = getUtilization(Tony, "");
+Vp = getFwdPlannedHours(Tony, "");
+Va = Tony.FwdHoursAvailable;
 
 
 

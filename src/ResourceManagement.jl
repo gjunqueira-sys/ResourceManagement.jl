@@ -19,6 +19,7 @@ export +
 export Statistics, mean
 export ReadLaborTracker, ReadAvailHours, getAvailMonthHours, writeAvailableFwdHours!
 export _getEmployeePlannedHours, fetchAndWritePlannedHours!, getFwdPlannedHours
+export getUtilization
 
 
 
@@ -594,15 +595,10 @@ end
 """
     getAvailMonthHours(df::DataFrame,  m::Int)
 
-Function to read Available hours for each month from SAP.
-Report should be saved in CSV format.
-YLF_UTIL_DEPT is used to pull available hours from.
-Pick one resource and run report to get the hours for each month.
-SAP report only goes fwd 12 months, spreadhsheet can be
-edited to include avail hours beyond 12 months.
+Function to read Available hours for each month from DataFrame.
 
 # Arguments
-- `fName::String`: filename of the report
+- `df::DataFrame`: DataFrame (output of ReadAvailHours)
 
 # Returns
 - `v::Vector`: Vector with available hours for each month.  Pos [1] is current month.
@@ -636,7 +632,7 @@ and a LaborVariable and write the available hours to the LaborVariable FwdHoursA
 This is a mutable function.
 
 # Arguments
-- `V::Vector`: Vector from getAvailMonthHours
+- `V::Vector`: Vector (output from getAvailMonthHours)
 - `D::LaborVariable`: LaborVariable object to write to
 
 """
@@ -653,6 +649,50 @@ function writeAvailableFwdHours!(V::Vector, D::LaborVariable)
 end
 
 
+
+
+"""
+    getUtilization(D::LaborVariable, proj::String)
+
+Function to get utilization for a given project from a LaborVariable object.
+If  the given project is not found, function will return utilization for all projects.
+
+# Arguments
+- `D::LaborVariable`: LaborVariable object to get information from
+- `proj::String`: Project to get information for. If no project is given ("") or found,
+    function will return all projects.
+
+# Returns
+- `v::Vector`: Vector with utilization (percent) for the project
+
+# Example:
+
+```julia
+    V = getUtilization(JohnDoe, "")
+```
+"""
+function getUtilization(D::LaborVariable, proj::String)
+    v=[];
+    Vf = D.FwdHoursForecast;
+    Vavail = D.FwdHoursAvailable;
+    if (proj ∉  D.Projects)
+        for i in 1:length(Vf[:,1])
+            x = sum(Vf[i,:])/sum(Vavail[i,:])
+            push!(v, x)
+        end
+        
+    else 
+        v = Vf[:, findfirst(x ->x == proj, D.Projects)]/Vavail[:, findfirst(x ->x == proj, D.Projects)]
+    end
+
+    return v
+
+
+
+
+
+
+end
 
 
 
