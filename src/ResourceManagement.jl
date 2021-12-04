@@ -346,14 +346,7 @@ function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::Labo
         @warn("undefined Projects")
     end
     
-    for m in 1:length(vh)
-        for i in enumerate(unique(pv))
-            
-            D.FwdHoursForecast[m, i[1]] = sum(vh[m][pv .== i[2]])
-            # push!(t, sum(V[m][pv .== p]))
-        end
-    
-    end
+    D.FwdHoursForecast = copy(vh)
     
     return vh, unique(pv), D
 end

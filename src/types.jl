@@ -41,7 +41,7 @@ mutable struct  DisciplineLabor <:LaborVariable
 
 
     FwdHoursAvailable::Array        # Fwd Hours Available on a given month.
-    FwdHoursForecast::Array         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.   
+    FwdHoursForecast::Vector{Vector{Int64}}         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.   
     RevHoursForecast::Array         # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted. 
     RevHoursAvailable::Array        # Array holding Hours Available Rev monthly (in past). Element [1] is the first month forecasted.     
 
@@ -79,7 +79,7 @@ mutable struct  DisciplineLabor <:LaborVariable
     """
     function DisciplineLabor()      # standard constructor supplied, all zerors, with 12 months array as default 
  
-        new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{Float64, 1}(undef, 12), Array{Float64, 2}(undef, 12, 12),Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12, 12),  Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12,12) ,
+        new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{Float64, 1}(undef, 12), Vector{Vector{Int64}}(),Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12, 12),  Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12,12) ,
         Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12, 12), "430300","", Array{String, 1}())
 
 
@@ -112,7 +112,7 @@ mutable struct  DisciplineLabor <:LaborVariable
     ```
     """
     function DisciplineLabor(Dept::String, Name::String, N::Int)     # Constructor that can specify number of months for Fwd and Rev Forecasts and also Dept
-        new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{Float64, 1}(undef, N),  Array{Float64, 2}(undef, N,N),  Array{Float64, 2}(undef, N,N),  Array{Float64, 2}(undef, N, N), Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N),
+        new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{Float64, 1}(undef, N),  Vector{Vector{Int64}}(),  Array{Float64, 2}(undef, N,N),  Array{Float64, 2}(undef, N, N), Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N),
         Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N), Dept, Name, Array{String, 1}())
     end
 
@@ -164,7 +164,7 @@ mutable struct  TeamLabor <:LaborVariable
     ActualIncurredCost::Float64     # Total Incurred Cost
     Projects::Array # project name
     FwdHoursAvailable::Array        # Fwd Hours Available on a given month.
-    FwdHoursForecast::Array         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.  
+    FwdHoursForecast::Vector{Vector{Int64}}         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.  
     RevHoursForecast::Array         # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted.   
     RevHoursAvailable::Array        # Array holding Hours Available Rev monthly (in past). Element [1] is the first month forecasted.   
     FwdCostsForecast::Array          # Array holding costs Forecasted Fwd monthly (future)
@@ -173,7 +173,7 @@ mutable struct  TeamLabor <:LaborVariable
     RevActualCostHours::Array     # Array holding Hours in Dollar Amounts incurred Rev monthly (in past)
     
     function TeamLabor()
-        new(Array{DisciplineLabor, 1}(),  "", "",0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{String, 1}(),Array{Float64, 1}(undef, 24), Array{Float64, 2}(undef, 24, 24),
+        new(Array{DisciplineLabor, 1}(),  "", "",0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{String, 1}(),Array{Float64, 1}(undef, 24), Vector{Vector{Int64}}(),
         Array{Float64, 2}(undef, 24 ,24), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24))
     end
 
