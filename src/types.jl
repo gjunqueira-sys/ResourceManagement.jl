@@ -20,7 +20,7 @@ abstract type LaborVariable <: ResourceVariable end
 - `ActualHours::Float64 `: stores actual incurred hours for resource
 - `ActualIncurredCost::Float64`: stores actual incurred Costs
 - `FwdHoursAvailable::Array`: stores monthly Hours Available from Present going forward
-- `FwdHoursForecast::Array`: stores Forecast monthly Hours from Present month going forward
+- `FwdHoursForecast::Vector{Vector{Int64}} `: stores Forecast monthly Hours from Present month going forward
 - `RevHoursForecast::Array`: stores Forecast monthly Hours from Present month going backwards (reverse)
 - `RevHoursAvailable::Array`: stores Forecast monthly Hours from Present month going backwards (reverse)
 - `FwdCostsForecast::Array`: stores forecasted monthly Labor cost  from Present going forward
@@ -63,7 +63,7 @@ mutable struct  DisciplineLabor <:LaborVariable
 
     Standard Constructor for Discipline Labor.
     ```
-    new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12) ,
+    new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{Float64, 1}(undef, 12), Vector{Vector{Int64}}(), Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12) ,
             Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12), "430300") 
     ```
 
@@ -97,7 +97,7 @@ mutable struct  DisciplineLabor <:LaborVariable
         N::Int
 
     ```
-    new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12) ,
+    new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{Float64, 1}(undef, 12), Vector{Vector{Int64}}(), Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12) ,
             Array{Float64, 1}(undef, 12), Array{Float64, 1}(undef, 12), "430300") 
     ```
 
@@ -140,7 +140,7 @@ Generates a TeamLabor object.
 - `ActualIncurredCost::Float64`: Total Incurred Cost
 - `Projects::Array` : Array of Projects for the Team
 - `FwdHoursAvailable::Array`: stores Fwd Hours Available on a given month.
-- `FwdHoursForecast::Array`: stores Forecast monthly Hours from Present month going forward
+- `FwdHoursForecast::Vector{Vector{Int64}} `: stores Forecast monthly Hours from Present month going forward
 - `RevHoursForecast::Array`: stores Forecast monthly Hours from Present month going backwards (reverse)
 - `RevHoursAvailable::Array`: stores Available monthly Hours from Present month going backwards (reverse)
 - `FwdCostsForecast::Array`: stores Forecasted monthly Labor cost  from Present going forward

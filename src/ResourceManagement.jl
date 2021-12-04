@@ -369,19 +369,19 @@ Function to get planned hours for a given project from a LaborVariable object.
 - `v::Vector`: Vector with planned hours for the project
 
 """
-function getFwdPlannedHours(D::LaborVariable, proj::String, V::Vector)
+function getFwdPlannedHours(D::LaborVariable, proj::String)
     v=[]
     if (proj ∉  D.Projects)
 
-        for i in 1:length(V)
+        for i in 1:length(D.FwdHoursForecast)
 
-            x = sum(V[i])
+            x = sum(D.FwdHoursForecast[i])
             push!(v, x)
         end
         
     else
-        for i in 1:length(V)
-            v = push!(v, V[i][findfirst(x ->x == proj, D.Projects)])
+        for i in 1:length(D.FwdHoursForecast)
+            v = push!(v, D.FwdHoursForecast[i][findfirst(x ->x == proj, D.Projects)])
         end
 
         
@@ -510,19 +510,17 @@ If  the given project is not found, function will return utilization for all pro
     V = getUtilization(JohnDoe, "")
 ```
 """
-function getUtilization(D::LaborVariable, proj::String, V::Vector)
+function getUtilization(D::LaborVariable, proj::String)
     v=[];
-    Vf = V;
-    Vavail = D.FwdHoursAvailable;
     if (proj ∉  D.Projects)
-        for i in 1:length(Vf)
-            x = sum(Vf[i])/sum(Vavail[i])
+        for i in 1:length(D.FwdHoursForecast)
+            x = sum(D.FwdHoursForecast[i])/sum(D.FwdHoursAvailable[i])
             push!(v, x)
         end
         
     else 
-        for i in 1: length(V)
-            v = push!(v, Vf[i][findfirst(x ->x == proj, D.Projects)] / sum(Vavail[i]))
+        for i in 1: length(D.FwdHoursForecast)
+            v = push!(v, D.FwdHoursForecast[i][findfirst(x ->x == proj, D.Projects)] / sum(D.FwdHoursAvailable[i]))
         end
     end
 
