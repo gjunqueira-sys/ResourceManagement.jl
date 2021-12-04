@@ -31,6 +31,31 @@ export Statistics, mean
 export ReadLaborTracker, ReadAvailHours, getAvailMonthHours, writeAvailableFwdHours!
 export _getEmployeePlannedHours, fetchAndWritePlannedHours!, getFwdPlannedHours
 export getUtilization
+export getFwdAvailableMonthHours
+export getName
+export getProjects
+export getDept
+export getRate
+
+
+
+
+
+## Function Implementations for LaborVariable Data Type:
+## getters
+function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable) end
+function getFwdPlannedHours(D::LaborVariable, proj::String) end
+function writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int) end
+function getUtilization(D::LaborVariable, proj::String) end
+getFwdAvailableMonthHours(D::LaborVariable) = D.FwdHoursAvailable #one line function definition
+getName(D::LaborVariable) = D.Name #one line function definition
+getProjects(D::LaborVariable) = D.Projects #one line function definition
+getDept(D::LaborVariable) = D.Dept #one line function definition to get Department name/number
+getRate(D::LaborVariable) = D.Rate #one line function definition to get rate
+
+
+
+
 
 
 
@@ -527,6 +552,19 @@ function getUtilization(D::LaborVariable, proj::String)
     return v
 
 end
+
+
+
+
+
+
+
+    
+
+
+
+
+
 
 
 

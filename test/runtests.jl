@@ -3,9 +3,9 @@ using DataFrames
 using Test
 
 
-A = ResourceManagement.types.DisciplineLabor();
-B = ResourceManagement.types.DisciplineLabor();
-C = ResourceManagement.types.DisciplineLabor();
+A = DisciplineLabor();
+B = DisciplineLabor();
+C = DisciplineLabor();
 A.BudgetHours = 160.0;
 B.BudgetHours = 200.0;
 C.BudgetHours = 240.0;
@@ -15,8 +15,16 @@ dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv");
 
 
 vh, pv = _getEmployeePlannedHours(dflabor, "HIGA ANTHONY", 24);
-Tony = ResourceManagement.types.DisciplineLabor("430300", "Higa Anthony",  24);
+Tony = DisciplineLabor("430300", "Higa Anthony",  24);
 V1, p1 = fetchAndWritePlannedHours!(dflabor, "HIGA ANTHONY", 24, Tony);
+
+Julie = DisciplineLabor("430300", "BRIONES JULITA",  24);
+fetchAndWritePlannedHours!(dflabor, "BRIONES JULITA", 24, Julie);
+
+Brad = DisciplineLabor("430300", "BORDEN BRADLEY",  24);
+fetchAndWritePlannedHours!(dflabor, "BORDEN BRADLEY", 24, Brad);
+
+Team = Tony + Julie + Brad;
 
 dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
 # dfAvail = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\UTILREPORT_FWD_NOV.csv");
@@ -26,6 +34,8 @@ dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
 p=unique(pv);
 
 writeAvailableFwdHours!(Tony, dfAvail, 24);
+writeAvailableFwdHours!(Julie, dfAvail, 24);
+writeAvailableFwdHours!(Brad, dfAvail, 24);
 
 
 Vp = getFwdPlannedHours(Tony, "");
@@ -36,6 +46,10 @@ Va = Tony.FwdHoursAvailable;
 TU1 = getUtilization(Tony, "");
 TU2 = getUtilization(Tony, "153804");
 TU3 = getUtilization(Tony, "154558");
+
+J1 = getFwdPlannedHours(Julie, "");
+
+B1 = getFwdPlannedHours(Brad, "");
 
 
 @testset "ResourceManagement.jl" begin
@@ -81,6 +95,10 @@ TU3 = getUtilization(Tony, "154558");
     
     
     @test sum(Tony.FwdHoursAvailable)[1] == 4016
+
+    @test sum(getFwdAvailableMonthHours(Tony))[1] == 4016
+
+    @test getName(Tony) == "Higa Anthony";
 
 
 
