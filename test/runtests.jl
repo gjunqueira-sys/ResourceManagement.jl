@@ -24,7 +24,8 @@ fetchAndWritePlannedHours!(dflabor, "BRIONES JULITA", 24, Julie);
 Brad = DisciplineLabor("430300", "BORDEN BRADLEY",  24);
 fetchAndWritePlannedHours!(dflabor, "BORDEN BRADLEY", 24, Brad);
 
-Team = Tony + Julie + Brad;
+Team1 = Tony + Julie
+Team2 = Tony + Julie + Brad
 
 dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
 # dfAvail = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\UTILREPORT_FWD_NOV.csv");

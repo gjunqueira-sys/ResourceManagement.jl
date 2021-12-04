@@ -164,7 +164,7 @@ mutable struct  TeamLabor <:LaborVariable
     ActualIncurredCost::Float64     # Total Incurred Cost
     Projects::Array # project name
     FwdHoursAvailable::Array        # Fwd Hours Available on a given month.
-    FwdHoursForecast::Vector{Vector{Int64}}         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.  
+    FwdHoursForecast::Vector        # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.  
     RevHoursForecast::Array         # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted.   
     RevHoursAvailable::Array        # Array holding Hours Available Rev monthly (in past). Element [1] is the first month forecasted.   
     FwdCostsForecast::Array          # Array holding costs Forecasted Fwd monthly (future)
@@ -173,13 +173,12 @@ mutable struct  TeamLabor <:LaborVariable
     RevActualCostHours::Array     # Array holding Hours in Dollar Amounts incurred Rev monthly (in past)
     
     function TeamLabor()
-        new(Array{DisciplineLabor, 1}(),  "", "",0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{String, 1}(),Array{Float64, 1}(undef, 24), Vector{Vector{Int64}}(),
+        new(Array{DisciplineLabor, 1}(),  "", "",0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Array{String, 1}(),Array{Float64, 1}(undef, 24), Vector{Int}(),
         Array{Float64, 2}(undef, 24 ,24), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24))
     end
 
 
 end
-
 
 
 
