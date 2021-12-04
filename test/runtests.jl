@@ -2,9 +2,10 @@ using ResourceManagement
 using DataFrames
 using Test
 
-A = DisciplineLabor();
-B = DisciplineLabor();
-C = DisciplineLabor();
+
+A = ResourceManagement.types.DisciplineLabor();
+B = ResourceManagement.types.DisciplineLabor();
+C = ResourceManagement.types.DisciplineLabor();
 A.BudgetHours = 160.0;
 B.BudgetHours = 200.0;
 C.BudgetHours = 240.0;
@@ -14,7 +15,7 @@ dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv");
 
 
 vh, pv = _getEmployeePlannedHours(dflabor, "HIGA ANTHONY", 24);
-Tony = DisciplineLabor("430300", "Higa Anthony",  24);
+Tony = ResourceManagement.types.DisciplineLabor("430300", "Higa Anthony",  24);
 V1, p1 = fetchAndWritePlannedHours!(dflabor, "HIGA ANTHONY", 24, Tony);
 
 dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");

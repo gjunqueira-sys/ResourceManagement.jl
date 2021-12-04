@@ -9,9 +9,20 @@ using Statistics
 using StatsBase
 using Dates
 
+
+
 # Importiong packages that will then be extended.
 import Base.+
 import Statistics.mean
+
+
+# Includes
+
+include("types.jl");
+using .types: TeamLabor  # Brings Team labor data type into scope.
+using .types: DisciplineLabor  # Brings Discipline labor data type into scope.
+using .types: LaborVariable # Brings Laborvariable data type into scope.
+
 
 # exports
 export DisciplineLabor, TeamLabor
