@@ -53,6 +53,7 @@ J1 = getFwdPlannedHours(Julie, "");
 B1 = getFwdPlannedHours(Brad, "");
 
 
+
 @testset "ResourceManagement.jl" begin
     # Write your tests here.
 
@@ -90,21 +91,34 @@ B1 = getFwdPlannedHours(Brad, "");
     @test sum(getFwdPlannedHours(Tony, "")) == 1446;
     @test sum(getFwdPlannedHours(Tony, "153804")) == 240.0
     @test sum(getFwdPlannedHours(Tony, "154558")) == 200.0
-
     @test  sum(Va .*(getUtilization(Tony, "")))[1] == 1446;
-
-    
-    
     @test sum(Tony.FwdHoursAvailable)[1] == 4016
-
     @test sum(getFwdAvailableMonthHours(Tony))[1] == 4016
-
     @test getName(Tony) == "Higa Anthony";
+    @test getProjects(Tony) == ["152242", "153804" , "154558", "154662", "IND-43", "NZ430300"];
+    
 
 
+
+
+
+    @test sum(getFwdPlannedHours(Julie, "")) == 3038;
+    @test sum(getFwdPlannedHours(Julie, "150547")) == 56;
+    @test sum(getFwdPlannedHours(Julie, "156257")) == 200;
+    @test getProjects(Julie) == ["150547", "152242", "154662", "156257", "NZ430300"]
+
+
+
+    @test sum(getFwdPlannedHours(Brad, "")) == 3821;
+    @test sum(getFwdPlannedHours(Brad, "154644")) == 344;
+    @test getProjects(Brad) == ["154644", "154662", "158070"]
+
+
+    @test getFwdPlannedHours(Team1, "") == getFwdPlannedHours(Tony, "") + getFwdPlannedHours(Julie, "");
+    @test getFwdPlannedHours(Team2, "") == getFwdPlannedHours(Tony, "") + getFwdPlannedHours(Julie, "") + getFwdPlannedHours(Brad, "");
 
     
 
 
-    
+
 end
