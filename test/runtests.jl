@@ -24,6 +24,10 @@ fetchAndWritePlannedHours!(dflabor, "BRIONES JULITA", 24, Julie);
 Brad = DisciplineLabor("430300", "BORDEN BRADLEY",  24);
 fetchAndWritePlannedHours!(dflabor, "BORDEN BRADLEY", 24, Brad);
 
+writeAvailableFwdHours!(Tony, dfAvail, 24);
+writeAvailableFwdHours!(Julie, dfAvail, 24);
+writeAvailableFwdHours!(Brad, dfAvail, 24);
+
 Team1 = Tony + Julie
 Team2 = Tony + Julie + Brad
 
@@ -34,9 +38,7 @@ dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
 
 p=unique(pv);
 
-writeAvailableFwdHours!(Tony, dfAvail, 24);
-writeAvailableFwdHours!(Julie, dfAvail, 24);
-writeAvailableFwdHours!(Brad, dfAvail, 24);
+
 
 
 Vp = getFwdPlannedHours(Tony, "");
@@ -51,6 +53,13 @@ TU3 = getUtilization(Tony, "154558");
 J1 = getFwdPlannedHours(Julie, "");
 
 B1 = getFwdPlannedHours(Brad, "");
+
+Tcap = getCapacity(Tony);
+Jcap = getCapacity(Julie);
+Bcap = getCapacity(Brad);
+
+T1cap = getCapacity(Team1);
+T2cap = getCapacity(Team2);
 
 
 
@@ -96,6 +105,9 @@ B1 = getFwdPlannedHours(Brad, "");
     @test sum(getFwdAvailableMonthHours(Tony))[1] == 4016
     @test getName(Tony) == "Higa Anthony";
     @test getProjects(Tony) == ["152242", "153804" , "154558", "154662", "IND-43", "NZ430300"];
+    @test sum(getCapacity(Tony)) == 2570;
+    @test sum(getCapacity(Tony)) == (sum(getFwdAvailableMonthHours(Tony))[1] - sum(getFwdPlannedHours(Tony, "")))
+
     
 
 
@@ -105,6 +117,7 @@ B1 = getFwdPlannedHours(Brad, "");
     @test sum(getFwdPlannedHours(Julie, "")) == 3038;
     @test sum(getFwdPlannedHours(Julie, "150547")) == 56;
     @test sum(getFwdPlannedHours(Julie, "156257")) == 200;
+    @test sum(getFwdAvailableMonthHours(Julie))[1] == 4016
     @test getProjects(Julie) == ["150547", "152242", "154662", "156257", "NZ430300"]
 
 
@@ -117,6 +130,7 @@ B1 = getFwdPlannedHours(Brad, "");
     @test getFwdPlannedHours(Team1, "") == getFwdPlannedHours(Tony, "") + getFwdPlannedHours(Julie, "");
     @test getFwdPlannedHours(Team2, "") == getFwdPlannedHours(Tony, "") + getFwdPlannedHours(Julie, "") + getFwdPlannedHours(Brad, "");
 
+    @test getFwdAvailableMonthHours(Team1) == getFwdAvailableMonthHours(Tony) + getFwdAvailableMonthHours(Julie);
     
 
 

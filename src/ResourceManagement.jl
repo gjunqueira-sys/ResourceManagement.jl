@@ -36,6 +36,7 @@ export getName
 export getProjects
 export getDept
 export getRate
+export getCapacity
 
 
 
@@ -47,11 +48,13 @@ export getRate
 # function getFwdPlannedHours(D::LaborVariable, proj::String) end
 # function writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int) end
 # function getUtilization(D::LaborVariable, proj::String) end
+# function getCapacity(D::LaborVariable) end
 getFwdAvailableMonthHours(D::LaborVariable) = D.FwdHoursAvailable #one line function definition
 getName(D::LaborVariable) = D.Name #one line function definition
 getProjects(D::LaborVariable) = D.Projects #one line function definition
 getDept(D::LaborVariable) = D.Dept #one line function definition to get Department name/number
 getRate(D::LaborVariable) = D.Budget.Rate #one line function definition to get rate /budget
+
 
 
 
@@ -544,6 +547,37 @@ end
 
 
 
+"""
+    getCapacity(D::LaborVariable)
+
+Get Capacity of Resource from LaborVariable object.
+Capacity is defined as the Difference between the sum of Available Hours for a given month and the sum of Planned Hours for a given month.
+
+# Arguments
+- `D::LaborVariable`: LaborVariable object to get information from
+
+# Returns
+- `v::Vector`: Vector with capacity for each month
+
+"""
+function getCapacity(D::LaborVariable)
+    v = []
+    for i in 1:length(D.FwdHoursForecast)
+        x = sum(D.FwdHoursAvailable[i]) - sum(D.FwdHoursForecast[i])
+        push!(v, x)
+    end
+    
+    return v
+end
+
+
+
+
+
+end
+
+    
+
 
 
 
@@ -558,4 +592,4 @@ end
 
 
 
-end
+
