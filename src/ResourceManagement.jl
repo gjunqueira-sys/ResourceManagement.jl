@@ -43,15 +43,15 @@ export getRate
 
 ## Function Implementations for LaborVariable Data Type:
 ## getters
-function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable) end
-function getFwdPlannedHours(D::LaborVariable, proj::String) end
-function writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int) end
-function getUtilization(D::LaborVariable, proj::String) end
+# function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable) end
+# function getFwdPlannedHours(D::LaborVariable, proj::String) end
+# function writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int) end
+# function getUtilization(D::LaborVariable, proj::String) end
 getFwdAvailableMonthHours(D::LaborVariable) = D.FwdHoursAvailable #one line function definition
 getName(D::LaborVariable) = D.Name #one line function definition
 getProjects(D::LaborVariable) = D.Projects #one line function definition
 getDept(D::LaborVariable) = D.Dept #one line function definition to get Department name/number
-getRate(D::LaborVariable) = D.Rate #one line function definition to get rate
+getRate(D::LaborVariable) = D.Budget.Rate #one line function definition to get rate /budget
 
 
 
@@ -116,10 +116,10 @@ function _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
     [push!(T.Projects, y.Projects[i]) for i in 1:length(y.Projects) if y.Projects[i] ∉ T.Projects];
 
     T.Name = x.Name * " & " * y.Name
-    T.Rate = Statistics.mean(x.Rate, y.Rate)
-    T.BudgetHours = x.BudgetHours + y.BudgetHours
-    T.BudgetDollars = x.BudgetDollars + y.BudgetDollars
-    T.TravelBudgetDollars = x.TravelBudgetDollars + y.TravelBudgetDollars
+    T.Budget.Rate = Statistics.mean(x.Budget.Rate, y.Budget.Rate)
+    T.Budget.Hours = x.Budget.Hours + y.Budget.Hours
+    T.Budget.Dollars = x.Budget.Dollars + y.Budget.Dollars
+    T.Budget.TravelDollars = x.Budget.TravelDollars + y.Budget.TravelDollars
 
     T.ActualHours = x.ActualHours + y.ActualHours
     T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost
@@ -166,10 +166,10 @@ function _TeamBuilder(x::TeamLabor, y::DisciplineLabor)
     [push!(x.Projects, y.Projects[i]) for i in 1:length(y.Projects) if y.Projects[i] ∉ x.Projects];
 
     T.Name = x.Name * " & " * y.Name
-    T.Rate = mean(x.Rate, y.Rate)
-    T.BudgetHours = x.BudgetHours + y.BudgetHours
-    T.BudgetDollars = x.BudgetDollars + y.BudgetDollars
-    T.TravelBudgetDollars = x.TravelBudgetDollars + y.TravelBudgetDollars
+    T.Budget.Rate = mean(x.Budget.Rate, y.Budget.Rate)
+    T.Budget.Hours = x.Budget.Hours + y.Budget.Hours
+    T.Budget.Dollars = x.Budget.Dollars + y.Budget.Dollars
+    T.Budget.TravelDollars = x.Budget.TravelDollars + y.Budget.TravelDollars
     T.ActualHours = x.ActualHours + y.ActualHours
     T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost
 

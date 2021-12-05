@@ -6,9 +6,9 @@ using Test
 A = DisciplineLabor();
 B = DisciplineLabor();
 C = DisciplineLabor();
-A.BudgetHours = 160.0;
-B.BudgetHours = 200.0;
-C.BudgetHours = 240.0;
+A.Budget.Hours = 160.0;
+B.Budget.Hours = 200.0;
+C.Budget.Hours = 240.0;
 T = A + B + C;
 dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
 # dflabor = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_PLANNED_FWD24_NOV.csv"); 
@@ -63,11 +63,11 @@ B1 = getFwdPlannedHours(Brad, "");
 
     
 
-    @test A.BudgetHours == 160.0;
-    @test B.BudgetHours == 200.0;
-    @test C.BudgetHours == 240.0;
+    @test A.Budget.Hours == 160.0;
+    @test B.Budget.Hours == 200.0;
+    @test C.Budget.Hours == 240.0;
     
-    @test T.BudgetHours == 600.0;
+    @test T.Budget.Hours == 600.0;
     
     
     @test size(dflabor) == (91, 79);

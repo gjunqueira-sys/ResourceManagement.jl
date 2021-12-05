@@ -1,0 +1,105 @@
+if args[2].args[2] == :All
+
+
+
+
+
+                #     println("""
+                #     Name: $(eval(args[1]).Name)
+                #     Dept: $(eval(args[1]).Dept)
+                #     Project: $(eval(args[1]).Project)
+                #     =============================
+                #     Rate: $(eval(args[1]).Rate)
+                #     =============================
+                #     FwdHoursForecast: $(eval(args[1]).FwdHoursForecast)
+                #     FwdCostsForecast: $(eval(args[1]).FwdCostsForecast)
+                #     =============================
+                #     RevHoursForecast: $(eval(args[1]).RevHoursForecast)
+                #     RevCostsForecast: $(eval(args[1]).RevCostsForecast)
+                #     =============================
+                    
+                    
+                #     """)
+                # elseif args[2].args[2] == :Sum
+                #     fwdsum=sum(eval(args[1]).FwdHoursForecast);
+                #     fwdcostsum=sum(eval(args[1]).FwdCostsForecast);
+                #     revsum=sum(eval(args[1]).RevHoursForecast);
+                #     revcostsum=sum(eval(args[1]).RevCostsForecast);
+                #     println("""
+                #     Name: $(eval(args[1]).Name)
+                #     Dept: $(eval(args[1]).Dept)
+                #     Project: $(eval(args[1]).Project)
+                #     =============================
+                #     Rate: $(eval(args[1]).Rate)
+                #     =============================
+                #     FwdHoursForecast: $fwdsum
+                #     FwdCostsForecast: $fwdcostsum
+                #     =============================
+                #     RevHoursForecast: $revsum
+                #     RevCostsForecast: $revcostsum
+                #     =============================
+                    
+                    
+                #     """)
+                # elseif args[2].args[2] == :Max
+                #     fwdmax=maximum(eval(args[1]).FwdHoursForecast);
+                #     fwdcostmax=maximum(eval(args[1]).FwdCostsForecast);
+                #     revmax=maximum(eval(args[1]).RevHoursForecast);
+                #     revcostmax=maximum(eval(args[1]).RevCostsForecast);
+                #     println("""
+                #     Name: $(eval(args[1]).Name)
+                #     Dept: $(eval(args[1]).Dept)
+                #     Project: $(eval(args[1]).Project)
+                #     =============================
+                #     Rate: $(eval(args[1]).Rate)
+                #     =============================
+                #     FwdHoursForecast: $fwdmax
+                #     FwdCostsForecast: $fwdcostmax
+                #     =============================
+                #     RevHoursForecast: $revmax
+                #     RevCostsForecast: $revcostmax
+                #     =============================
+                #     """
+                #     )
+
+                # elseif args[2].args[2] == :Min
+                #     fwdmin=minimum(eval(args[1]).FwdHoursForecast);
+                #     fwdcostmin=minimum(eval(args[1]).FwdCostsForecast);
+                #     revmin=minimum(eval(args[1]).RevHoursForecast);
+                #     revcostmin=minimum(eval(args[1]).RevCostsForecast);
+                #     println("""
+                #     Name: $(eval(args[1]).Name)
+                #     Dept: $(eval(args[1]).Dept)
+                #     Project: $(eval(args[1]).Project)
+                #     =============================
+                #     Rate: $(eval(args[1]).Rate)
+                #     =============================
+                #     FwdHoursForecast: $fwdmin
+                #     FwdCostsForecast: $fwdcostmin
+                #     =============================
+                #     RevHoursForecast: $revmin
+                #     RevCostsForecast: $revcostmin
+                #     =============================
+                #     """
+                #     )
+
+                # elseif args[2].args[2] == :Mean
+                #     fwdavg=mean(eval(args[1]).FwdHoursForecast);
+                #     fwdcostavg=mean(eval(args[1]).FwdCostsForecast);
+                #     revavg=mean(eval(args[1]).RevHoursForecast);
+                #     revcostavg=mean(eval(args[1]).RevCostsForecast);
+                #     println("""
+                #     Name: $(eval(args[1]).Name)
+                #     Dept: $(eval(args[1]).Dept)
+                #     Project: $(eval(args[1]).Project)
+                #     =============================
+                #     Rate: $(eval(args[1]).Rate)
+                #     =============================
+                #     FwdHoursForecast: $fwdavg
+                #     FwdCostsForecast: $fwdcostavg
+                #     =============================
+                #     RevHoursForecast: $revavg
+                #     RevCostsForecast: $revcostavg
+                #     =============================
+                #     """
+                #     )
