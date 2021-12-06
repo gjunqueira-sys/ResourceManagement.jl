@@ -131,7 +131,9 @@ T2cap = getCapacity(Team2);
     @test sum(getRevPlannedHours(Brad, "")) == 2727;
 
     @test getFwdPlannedHours(Team1, "") == getFwdPlannedHours(Tony, "") + getFwdPlannedHours(Julie, "");
+    @test getRevPlannedHours(Team1, "") == getRevPlannedHours(Tony, "") + getRevPlannedHours(Julie, "");
     @test getFwdPlannedHours(Team2, "") == getFwdPlannedHours(Tony, "") + getFwdPlannedHours(Julie, "") + getFwdPlannedHours(Brad, "");
+    @test getRevPlannedHours(Team2, "") == getRevPlannedHours(Tony, "") + getRevPlannedHours(Julie, "") + getRevPlannedHours(Brad, "");
 
     @test getFwdAvailableMonthHours(Team1) == getFwdAvailableMonthHours(Tony) + getFwdAvailableMonthHours(Julie);
     
