@@ -23,13 +23,17 @@ using .types: TeamLabor  # Brings Team labor data type into scope.
 using .types: DisciplineLabor  # Brings Discipline labor data type into scope.
 using .types: LaborVariable # Brings Laborvariable data type into scope.
 
+include("Utils.jl");
+using .Utils: ReadLaborTracker
+using .Utils: ReadAvailHours
+
 
 # exports
 export DisciplineLabor, TeamLabor
 export +
 export Statistics, mean
 export ReadLaborTracker, ReadAvailHours, getAvailMonthHours, writeAvailableFwdHours!
-export _getEmployeePlannedHours, fetchAndWritePlannedHours!, getFwdPlannedHours
+export _getEmployeeHoursFromDf, fetchAndWritePlannedHours!, getFwdPlannedHours, getRevPlannedHours
 export getUtilization
 export getFwdAvailableMonthHours
 export getName
@@ -46,6 +50,7 @@ export getCapacity
 ## getters
 # function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable) end
 # function getFwdPlannedHours(D::LaborVariable, proj::String) end
+# function getRevPlannedHours(D::LaborVariable, proj::String) end
 # function writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int) end
 # function getUtilization(D::LaborVariable, proj::String) end
 # function getCapacity(D::LaborVariable) end
@@ -131,7 +136,7 @@ function _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
     T.RevHoursAvailable = x.RevHoursAvailable + y.RevHoursAvailable
 
     T.FwdHoursForecast = sum.(x.FwdHoursForecast)  + sum.(y.FwdHoursForecast) #FwdHoursAvailable collapses into Vector with all hours added in one dimension
-    T.RevHoursForecast = x.RevHoursForecast + y.RevHoursForecast
+    T.RevHoursForecast = sum.(x.RevHoursForecast)  + sum.(y.RevHoursForecast) #RevHoursAvailable collapses into Vector with all hours added in one dimension
     
     T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast
     T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast
@@ -177,7 +182,7 @@ function _TeamBuilder(x::TeamLabor, y::DisciplineLabor)
     T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost
 
     T.FwdHoursForecast = sum.(x.FwdHoursForecast) + sum.(y.FwdHoursForecast)
-    T.RevHoursForecast = x.RevHoursForecast + y.RevHoursForecast
+    T.RevHoursForecast = sum.(x.RevHoursForecast) + sum.(y.RevHoursForecast)
 
     T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast
     T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast
@@ -240,39 +245,12 @@ end
 
 
 
-"""
-    ReadLaborTracker(fName::String)
 
-Function to read ACTUAL_PLANNED hours from SAP.
-Report should be saved in CSV format.
-Rows with missing names of resources are ignored.
-
-# Arguments
-- `fName::String`: filename of the report
-
-# Returns
-- `df::DataFrame`: DataFrame of the report
-
-# Example:
-
-```julia
-    df = ReadLaborTracker("C:\\Users\\james\\Desktop\\labor_tracker.csv")
-```
-
-"""
-function ReadLaborTracker(fName::String)
-    
-    df = CSV.read(fName, DataFrame)
-    df = dropmissing(df, :"Employee Name");
-
-    
-    return df;
-end
 
 
 
 """
-    _getEmployeePlannedHours(df::DataFrame, name::String, m::Int)
+    _getEmployeeHoursFromDf(df::DataFrame, name::String, m::Int)
 
     Function to filter df by Employee name. 
 
@@ -280,20 +258,22 @@ end
 - `df::DataFrame`: dataframe of report (output of ReadLaborTracker)
 - `name::String`: name of employee (need to match sap name)
 - `m::Int`: number of months
+- `col::Symbol`: start column of dataframe to filter by for the function of Interest. :plan , :actual. Defaults to :plan
 
 # Returns
 - `v::Vector`: Vector with the hours for each month
 - `p:: Vector`: Vector with employee's projects
 
-# Example:
-
-```julia
-    vh, pv = getEmployeePlannedHours(dflabor, "Doe John", 24)
-```
-
 """
-function _getEmployeePlannedHours(df::DataFrame, name::String, m::Int)
-    startcol = 9; #column where first planned hours are
+function _getEmployeeHoursFromDf(df::DataFrame, name::String, m::Int, col::Symbol)
+
+    if col == :plan
+        startcol = 9 #this matchs for both Fwd and Rev Sap Report
+    elseif col == :actual
+        startcol = 8
+    else 
+        startcol = 9 #defaults to plan
+    end
 
     filter = (df."Employee Name").==name
     df = df[filter,:]
@@ -303,6 +283,13 @@ function _getEmployeePlannedHours(df::DataFrame, name::String, m::Int)
 
     return v, p
 end
+
+
+
+
+
+
+
 
 
 
@@ -349,10 +336,9 @@ LaborVariable.FwdHoursForecast[1] will hold the current month.
 # Throws
 - `undefined Projects`: if projects do not match or are not found.
 """
-function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable)
+function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable, target::Symbol)
 
-    vh, pv = _getEmployeePlannedHours(df, name, m)
-    l = length(D.FwdHoursForecast); #number of months in the DisciplineLabor object
+    vh, pv = _getEmployeeHoursFromDf(df, name, m, :plan)
     pvu = unique(pv);
     
     try
@@ -361,11 +347,22 @@ function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::Labo
     catch
         @warn("undefined Projects")
     end
+
+    if target == :fwd
+        D.FwdHoursForecast = copy(vh)
+    elseif target == :rev
+        D.RevHoursForecast = copy(vh)
+    end
     
-    D.FwdHoursForecast = copy(vh)
+   
     
     return vh, unique(pv), D
 end
+
+
+
+
+
 
 
 
@@ -409,34 +406,44 @@ end
 
 
 
-"""
-    ReadAvailHours(fName::String)
 
-Function to read Available hours on a given month from SAP.
-Report should be saved in CSV format.
-YLF_UTIL_DEPT is used to pull available hours from.
-Since SAP report only goes fwd 12 months, spreadhsheet can be 
-edited to include avail hours beyond 12 months.
+"""
+    getRevPlannedHours(D::LaborVariable, proj::String)
+
+Function to get planned hours for a given project from a LaborVariable object.
 
 # Arguments
-- `fName::String`: filename of the report
+- `D::LaborVariable`: LaborVariable object to get information from
+- `proj::String`: Project to get information for. If no project is given ("") or found,
+    function will return all projects.
 
 # Returns
-- `df::DataFrame`: DataFrame of the report
-
-# Example:
-
-```julia
-    df = ReadAvailHours("C:\\Users\\james\\Desktop\\labor_tracker.csv")
-```
+- `v::Vector`: Vector with planned hours for the project
 
 """
-function ReadAvailHours(fName::String)
-    
-    df = CSV.read(fName, DataFrame)
+function getRevPlannedHours(D::LaborVariable, proj::String)
+    v=[]
+    if (proj ∉  D.Projects)
+
+        for i in 1:length(D.RevHoursForecast)
+
+            x = sum(D.RevHoursForecast[i])
+            push!(v, x)
+        end
         
-    return df;
+    else
+        for i in 1:length(D.RevHoursForecast)
+            v = push!(v, D.RevHoursForecast[i][findfirst(x ->x == proj, D.Projects)])
+        end
+
+        
+    end
+    
+    return v
 end
+
+
+
 
 
 
