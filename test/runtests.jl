@@ -2,6 +2,11 @@ using ResourceManagement
 using DataFrames
 using Test
 
+dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
+# dflabor = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_PLANNED_FWD24_NOV.csv"); 
+dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
+# dfAvail = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\UTILREPORT_FWD_NOV.csv");
+
 
 A = DisciplineLabor();
 B = DisciplineLabor();
@@ -10,8 +15,6 @@ A.Budget.Hours = 160.0;
 B.Budget.Hours = 200.0;
 C.Budget.Hours = 240.0;
 T = A + B + C;
-dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
-# dflabor = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_PLANNED_FWD24_NOV.csv"); 
 
 
 vh, pv = _getEmployeePlannedHours(dflabor, "HIGA ANTHONY", 24);
@@ -31,8 +34,6 @@ writeAvailableFwdHours!(Brad, dfAvail, 24);
 Team1 = Tony + Julie
 Team2 = Tony + Julie + Brad
 
-dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
-# dfAvail = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\UTILREPORT_FWD_NOV.csv");
 
 
 
