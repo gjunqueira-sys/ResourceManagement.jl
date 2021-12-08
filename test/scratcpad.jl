@@ -46,6 +46,7 @@ dfRev = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Program
 
 
 Tony = DisciplineLabor("430300", "Higa Anthony",  24);
+Julie = DisciplineLabor("430300", "BRIONES JULITA",  24);
 
 
 fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :plan);
@@ -54,48 +55,16 @@ fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :plan);
 
 
 
-
-function _getEmployeeHoursFromDf2(df::DataFrame, name::String, m::Int, col::Symbol)
-
-    if col == :plan
-        startcol = 9 #this matchs for both Fwd and Rev Sap Report
-    elseif col == :actual
-        startcol = 8
-    else 
-        startcol = 9 #defaults to plan
-    end
-    
-
-
-    filter = (df."Employee Name").==name
-    df = df[filter,:]
-    cols = [startcol+3*cols for cols in 0: m-1]
-    numbercols = [numbercols for numbercols in 2:m ]
-
-    dfg = groupby(df, :"Project");
-    
-
-    dfg_hours_per_month_per_name = combine(dfg, cols .=>sum)
-
-    return dfg_hours_per_month_per_name
-end
-
-
-d = _getEmployeeHoursFromDf2(dfRev, "HIGA ANTHONY", 18, :plan)
-
-
 Tony = fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :rev);
 Tony = fetchAndWritePlannedHours!(dflabor, "HIGA ANTHONY", 24, Tony, :fwd);
 
-newT.RevHoursForecast.Project
 
-filter = (newT.RevHoursForecast.Project).=="153804"
-sum(newT.RevHoursForecast[filter, :][1, 2:end])
-
+Julie = fetchAndWritePlannedHours!(dfRev, "BRIONES JULITA", 18, Julie, :rev);
+Julie = fetchAndWritePlannedHours!(dflabor, "BRIONES JULITA", 24, Julie, :fwd);
 
 
 
-
+Tony + Julie
 
 
 
@@ -129,4 +98,42 @@ v = Vector(v[1, :])
 
 sum(getFwdPlannedHours(Tony, "153804"))
 
-Tony
+Tony.FwdHoursForecast.Project
+Julie.FwdHoursForecast.Project
+
+
+Tr = DisciplineLabor("430300", "Higa Anthony",  24);
+
+Tr.FwdHoursForecast.Project
+
+Tony.FwdHoursForecast ∪ Julie.FwdHoursForecast
+S1 = Set(Julie.FwdHoursForecast.Project)
+
+S2 = Set(Tony.FwdHoursForecast.Project)
+
+Tony.FwdHoursForecast.Project
+
+S1 ∪ S2
+
+Tr.FwdHoursForecast.Project = String.(S1 ∪ S2)
+
+Tr.FwdHoursForecast[!,:Project] = String.(S1 ∪ S2)
+
+String.(S1 ∪ S2)
+
+Tr.FwdHoursForecast
+
+Tony.FwdHoursForecast
+
+names(Tony.FwdHoursForecast)
+Tony.FwdHoursForecast[:,2] .+ Julie.FwdHoursForecast[:,2]
+
+Tr.FwdHoursForecast = vcat(Tony.FwdHoursForecast, Julie.FwdHoursForecast)
+
+Tr.FwdHoursForecast.Project
+
+sum(getFwdPlannedHours(Julie))
+getFwdPlannedHours(Tony)
+dflabor
+
+sum(getFwdPlannedHours(Tr))
