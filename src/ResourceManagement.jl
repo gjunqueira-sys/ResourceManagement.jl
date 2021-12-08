@@ -312,7 +312,7 @@ end
 
 function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable, target::Symbol)
 
-    df2 = _getEmployeeHoursFromDf2(df, name, m, :plan)
+    df2 = _getEmployeeHoursFromDf(df, name, m, :plan)
     
     try
         
@@ -363,20 +363,22 @@ Function to get planned hours for a given project from a LaborVariable object.
 - `v::Vector`: Vector with planned hours for the project
 
 """
-function getFwdPlannedHours(D::LaborVariable, proj::String)
+function getFwdPlannedHours(D::LaborVariable, proj::String = "")
     v=[]
-    if (proj ∉  D.Projects)
+    months = names(D.FwdHoursForecast)[2:end] #get only month columns
 
-        for i in 1:length(D.FwdHoursForecast)
+    if (proj ∉  D.FwdHoursForecast.Project)
 
-            x = sum(D.FwdHoursForecast[i])
-            push!(v, x)
-        end
+        
+        v = combine(D.FwdHoursForecast, months .=>sum) #get combine hours per month
+        v = Vector(v[1,:]) #vector of hours per month
+        
         
     else
-        for i in 1:length(D.FwdHoursForecast)
-            v = push!(v, D.FwdHoursForecast[i][findfirst(x ->x == proj, D.Projects)])
-        end
+        filter = D.FwdHoursForecast.Project .== proj
+        v = combine(D.FwdHoursForecast[filter, :], months .=>sum)
+        v = Vector(v[1,:]) #vector of hours per month for the selected project
+
 
         
     end
@@ -402,20 +404,22 @@ Function to get planned hours for a given project from a LaborVariable object.
 - `v::Vector`: Vector with planned hours for the project
 
 """
-function getRevPlannedHours(D::LaborVariable, proj::String)
+function getRevPlannedHours(D::LaborVariable, proj::String = "")
     v=[]
-    if (proj ∉  D.Projects)
+    months = names(D.RevHoursForecast)[2:end] #get only month columns
 
-        for i in 1:length(D.RevHoursForecast)
+    if (proj ∉  D.RevHoursForecast.Project)
 
-            x = sum(D.RevHoursForecast[i])
-            push!(v, x)
-        end
+        
+        v = combine(D.RevHoursForecast, months .=>sum) #get combine hours per month
+        v = Vector(v[1,:]) #vector of hours per month
+        
         
     else
-        for i in 1:length(D.RevHoursForecast)
-            v = push!(v, D.RevHoursForecast[i][findfirst(x ->x == proj, D.Projects)])
-        end
+        filter = D.RevHoursForecast.Project .== proj
+        v = combine(D.RevHoursForecast[filter, :], months .=>sum)
+        v = Vector(v[1,:]) #vector of hours per month for the selected project
+
 
         
     end

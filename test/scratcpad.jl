@@ -4,7 +4,7 @@ A = DisciplineLabor()
 B = DisciplineLabor()
 
 
-dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
+dflabor = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_PLANNED_FWD24_NOV.csv"); 
 vh, pv = _getEmployeePlannedHours(dflabor, "HIGA ANTHONY", 24)
 
 
@@ -48,7 +48,7 @@ dfRev = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Program
 Tony = DisciplineLabor("430300", "Higa Anthony",  24);
 
 
-fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :rev);
+fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :plan);
 
 
 
@@ -84,9 +84,49 @@ end
 d = _getEmployeeHoursFromDf2(dfRev, "HIGA ANTHONY", 18, :plan)
 
 
-newT = fetchAndWritePlannedHours2!(dfRev, "HIGA ANTHONY", 18, Tony, :rev);
+Tony = fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :rev);
+Tony = fetchAndWritePlannedHours!(dflabor, "HIGA ANTHONY", 24, Tony, :fwd);
 
 newT.RevHoursForecast.Project
 
 filter = (newT.RevHoursForecast.Project).=="153804"
 sum(newT.RevHoursForecast[filter, :][1, 2:end])
+
+
+
+
+
+
+
+
+TT = combine(Tony.FwdHoursForecast, months .=>sum)
+
+size(Tony.FwdHoursForecast)[2]
+
+TT = Tony.FwdHoursForecast[:, 2: end]
+months= names(Tony.FwdHoursForecast)[2:end]
+
+Vector(TT[1,:])
+
+Vector(TT)
+
+Vector(TT)
+
+
+combine(Tony.FwdHoursForecast, months .=>sum)
+
+
+Tony.FwdHoursForecast.Project
+
+filter = Tony.FwdHoursForecast.Project .== "153804"
+
+df = Tony.FwdHoursForecast
+
+v = combine(df[filter, :] , months .=>sum)
+v
+
+v = Vector(v[1, :])
+
+sum(getFwdPlannedHours(Tony, "153804"))
+
+Tony
