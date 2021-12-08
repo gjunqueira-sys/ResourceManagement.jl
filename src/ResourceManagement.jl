@@ -245,24 +245,21 @@ end
 
 
 
-
-
-
-
 """
-    _getEmployeeHoursFromDf(df::DataFrame, name::String, m::Int)
+Function to transform df into a vector of vectors
+rows of this vector will represent each month (18 months as default for rev report)
+then each row will have a vector of hours for each project. Hours are summed for each project.
 
-    Function to filter df by Employee name. 
+    function _getEmployeeHoursFromDf2(df::DataFrame, name::String, m::Int, col::Symbol)
 
-# Arguments
-- `df::DataFrame`: dataframe of report (output of ReadLaborTracker)
-- `name::String`: name of employee (need to match sap name)
-- `m::Int`: number of months
-- `col::Symbol`: start column of dataframe to filter by for the function of Interest. :plan , :actual. Defaults to :plan
+# Parameters
+# df: DataFrame
+# name: String
+# m: Int
+# col: Symbol
 
 # Returns
-- `v::Vector`: Vector with the hours for each month
-- `p:: Vector`: Vector with employee's projects
+# v: Vector of vectors
 
 """
 function _getEmployeeHoursFromDf(df::DataFrame, name::String, m::Int, col::Symbol)
@@ -274,20 +271,21 @@ function _getEmployeeHoursFromDf(df::DataFrame, name::String, m::Int, col::Symbo
     else 
         startcol = 9 #defaults to plan
     end
+    
+
 
     filter = (df."Employee Name").==name
     df = df[filter,:]
     cols = [startcol+3*cols for cols in 0: m-1]
-    p = df[:,2]; # vector with employee Projects
-    v = [(collect(df[:,cols[i]])) for i in 1: length(cols)]
+    numbercols = [numbercols for numbercols in 2:m ]
 
-    return v, p
+    dfg = groupby(df, :"Project");
+    
+
+    dfg_hours_per_month_per_name = combine(dfg, cols .=>sum)
+
+    return dfg_hours_per_month_per_name
 end
-
-
-
-
-
 
 
 
@@ -312,52 +310,35 @@ end
 
 
 
-
-
-"""
-    fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable)
-
-Function to fetch planned hours from ACTUAL_PLANNED SAP report 
-for a given Employee name and number of months.
-Function will then save information to the LaborVariable object.
-LaborVariable.FwdHoursForecast[1] will hold the current month.
- 
-# Arguments
-- `df::DataFrame`: df labor DataFrame
-- `name::String`: Name of Employee
-- `m::Int`: number of months to fetch and save
-- `D::LaborVariable`: LaborVariable object to save information to
-
-# Returns
-- `vh`: Array of vectors with Planned Hours for each month for projects
-- `pv`: Array of vectors with Projects
-- `D::LaborVariable` : LaborVariable object with the updated information.
-
-# Throws
-- `undefined Projects`: if projects do not match or are not found.
-"""
 function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable, target::Symbol)
 
-    vh, pv = _getEmployeeHoursFromDf(df, name, m, :plan)
-    pvu = unique(pv);
+    df2 = _getEmployeeHoursFromDf2(df, name, m, :plan)
     
     try
         
-        [push!(D.Projects, pvu[i]) for i in 1:length(pvu) if pvu[i] ∉ D.Projects];
+        [push!(D.Projects, p) for p in df2.Project if p ∉ D.Projects];
     catch
         @warn("undefined Projects")
     end
 
     if target == :fwd
-        D.FwdHoursForecast = copy(vh)
+        D.FwdHoursForecast = copy(df2)
     elseif target == :rev
-        D.RevHoursForecast = copy(vh)
+        D.RevHoursForecast = copy(df2)
     end
     
    
     
-    return vh, unique(pv), D
+    return D
 end
+
+
+
+
+
+
+
+
 
 
 

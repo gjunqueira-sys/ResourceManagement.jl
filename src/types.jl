@@ -1,5 +1,7 @@
 module types
 
+using DataFrames
+
 # Abstract class for all resource modules
 abstract type ResourceVariable end
 
@@ -76,8 +78,8 @@ mutable struct  DisciplineLabor <:LaborVariable
 
 
     FwdHoursAvailable::Array        # Fwd Hours Available on a given month.
-    FwdHoursForecast::Vector{Vector{Real}}         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.   
-    RevHoursForecast::Vector{Vector{Real}}          # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted. 
+    FwdHoursForecast::DataFrame         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.   
+    RevHoursForecast::DataFrame          # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted. 
     RevHoursAvailable::Array        # Array holding Hours Available Rev monthly (in past). Element [1] is the first month forecasted.     
 
     FwdCostsForecast::Array          # Array holding costs Forecasted Fwd monthly (future)
@@ -116,7 +118,7 @@ mutable struct  DisciplineLabor <:LaborVariable
 
 
         
-        new(Budget(), 0.0, 0.0, Array{Float64, 1}(undef, 12), Vector{Vector{Int64}}(), Vector{Vector{Int64}}(), Array{Float64, 2}(undef, 12, 12),  Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12,12) ,
+        new(Budget(), 0.0, 0.0, Array{Float64, 1}(undef, 12), DataFrame(), DataFrame(), Array{Float64, 2}(undef, 12, 12),  Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12,12) ,
         Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12, 12), "430300","", Array{String, 1}())
 
 
@@ -149,7 +151,7 @@ mutable struct  DisciplineLabor <:LaborVariable
     ```
     """
     function DisciplineLabor(Dept::String, Name::String, N::Int)     # Constructor that can specify number of months for Fwd and Rev Forecasts and also Dept
-        new(Budget(), 0.0, 0.0, Array{Float64, 1}(undef, N),  Vector{Vector{Int64}}(),  Vector{Vector{Int64}}(),  Array{Float64, 2}(undef, N, N), Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N),
+        new(Budget(), 0.0, 0.0, Array{Float64, 1}(undef, N),  DataFrame(),  DataFrame(),  Array{Float64, 2}(undef, N, N), Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N),
         Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N), Dept, Name, Array{String, 1}())
     end
 
