@@ -135,8 +135,8 @@ function _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
     T.FwdHoursAvailable = x.FwdHoursAvailable + y.FwdHoursAvailable
     T.RevHoursAvailable = x.RevHoursAvailable + y.RevHoursAvailable
 
-    T.FwdHoursForecast = sum.(x.FwdHoursForecast)  + sum.(y.FwdHoursForecast) #FwdHoursAvailable collapses into Vector with all hours added in one dimension
-    T.RevHoursForecast = sum.(x.RevHoursForecast)  + sum.(y.RevHoursForecast) #RevHoursAvailable collapses into Vector with all hours added in one dimension
+    T.FwdHoursForecast = vcat(x.FwdHoursForecast, y.FwdHoursForecast) 
+    T.RevHoursForecast = vcat(x.RevHoursForecast, y.RevHoursForecast) 
     
     T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast
     T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast
@@ -181,8 +181,8 @@ function _TeamBuilder(x::TeamLabor, y::DisciplineLabor)
     T.ActualHours = x.ActualHours + y.ActualHours
     T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost
 
-    T.FwdHoursForecast = sum.(x.FwdHoursForecast) + sum.(y.FwdHoursForecast)
-    T.RevHoursForecast = sum.(x.RevHoursForecast) + sum.(y.RevHoursForecast)
+    T.FwdHoursForecast = vcat(x.FwdHoursForecast, y.FwdHoursForecast)
+    T.RevHoursForecast = vcat(x.RevHoursForecast, y.RevHoursForecast)
 
     T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast
     T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast

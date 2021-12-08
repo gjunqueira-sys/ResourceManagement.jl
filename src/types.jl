@@ -202,8 +202,8 @@ mutable struct  TeamLabor <:LaborVariable
     ActualIncurredCost::Real     # Total Incurred Cost
     Projects::Array # project name
     FwdHoursAvailable::Array        # Fwd Hours Available on a given month.
-    FwdHoursForecast::Vector        # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.  
-    RevHoursForecast::Vector         # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted.   
+    FwdHoursForecast::DataFrame        # DataFrame holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.  
+    RevHoursForecast::DataFrame        # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted.   
     RevHoursAvailable::Array        # Array holding Hours Available Rev monthly (in past). Element [1] is the first month forecasted.   
     FwdCostsForecast::Array          # Array holding costs Forecasted Fwd monthly (future)
     RevCostsForecast::Array         # Array holding costs Forecasted Rev  monthly (past)
@@ -211,8 +211,8 @@ mutable struct  TeamLabor <:LaborVariable
     RevActualCostHours::Array     # Array holding Hours in Dollar Amounts incurred Rev monthly (in past)
     
     function TeamLabor()
-        new(Array{DisciplineLabor, 1}(),  "", "",Budget(), 0.0, 0.0, Array{String, 1}(),Array{Float64, 1}(undef, 24), Vector{Int}(),
-        Vector{Int}(), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24))
+        new(Array{DisciplineLabor, 1}(),  "", "",Budget(), 0.0, 0.0, Array{String, 1}(),Array{Float64, 1}(undef, 24), DataFrame(),
+        DataFrame(), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24))
     end
 
 
