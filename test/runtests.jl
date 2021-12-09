@@ -7,6 +7,7 @@ dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv");
 dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
 # dfAvail = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\UTILREPORT_FWD_NOV.csv");
 dfRev = ReadLaborTracker("src\\TEAM_ACTUALPLAN_REV18.csv"); 
+# dfRev = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_ACTUALPLAN_REV18.csv"); 
 
 A = DisciplineLabor();
 B = DisciplineLabor();
