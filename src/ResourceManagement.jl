@@ -53,7 +53,7 @@ export _getAvailMonthHours
 # function getFwdPlannedHours(D::LaborVariable, proj::String) end
 # function getRevPlannedHours(D::LaborVariable, proj::String) end
 # function writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int) end
-# function getUtilization(D::LaborVariable, proj::String) end
+# function getFwdUtilization(D::LaborVariable, proj::String) end
 # function getCapacity(D::LaborVariable) end
 getFwdAvailableMonthHours(D::LaborVariable) = D.FwdHoursAvailable #one line function definition
 getName(D::LaborVariable) = D.Name #one line function definition
