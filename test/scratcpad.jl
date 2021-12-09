@@ -40,7 +40,11 @@ sum(getFwdPlannedHours(Tony, "153804"))
 
 
 dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv")
+A = _getAvailMonthHours(dfAvail, 24)
 
+for i in A
+    @show i[1]
+end
 
 dfRev = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_ACTUALPLAN_REV18.csv");
 
