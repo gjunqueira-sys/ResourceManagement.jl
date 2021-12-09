@@ -34,13 +34,14 @@ export +
 export Statistics, mean
 export ReadLaborTracker, ReadAvailHours, getAvailMonthHours, writeAvailableFwdHours!
 export _getEmployeeHoursFromDf, fetchAndWritePlannedHours!, getFwdPlannedHours, getRevPlannedHours
-export getUtilization
+export getFwdUtilization
 export getFwdAvailableMonthHours
 export getName
 export getProjects
 export getDept
 export getRate
 export getCapacity
+export _getAvailMonthHours
 
 
 
@@ -483,15 +484,10 @@ function writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int)
 
     V = _getAvailMonthHours(df, m)
 
-    if length(V) == length(D.FwdHoursAvailable)
-        D.FwdHoursAvailable = V
-        
-    else
-        println("""
-        Error:
-        Vector length does not match LaborVariable length.
-        """)
+    for i in V
+        push!(D.FwdHoursAvailable, i[1])
     end
+
 end
 
 
@@ -518,18 +514,15 @@ If  the given project is not found, function will return utilization for all pro
     V = getUtilization(JohnDoe, "")
 ```
 """
-function getUtilization(D::LaborVariable, proj::String)
+function getFwdUtilization(D::LaborVariable, proj::String)
     v=[];
     if (proj ∉  D.Projects)
-        for i in 1:length(D.FwdHoursForecast)
-            x = sum(D.FwdHoursForecast[i])/sum(D.FwdHoursAvailable[i])
-            push!(v, x)
-        end
+        getFwdPlannedHours(D) ./ D.FwdHoursAvailable
+        
         
     else 
-        for i in 1: length(D.FwdHoursForecast)
-            v = push!(v, D.FwdHoursForecast[i][findfirst(x ->x == proj, D.Projects)] / sum(D.FwdHoursAvailable[i]))
-        end
+        getFwdPlannedHours(D, proj) ./ D.FwdHoursAvailable
+        
     end
 
     return v
@@ -554,10 +547,7 @@ Capacity is defined as the Difference between the sum of Available Hours for a g
 """
 function getCapacity(D::LaborVariable)
     v = []
-    for i in 1:length(D.FwdHoursForecast)
-        x = sum(D.FwdHoursAvailable[i]) - sum(D.FwdHoursForecast[i])
-        push!(v, x)
-    end
+    v = D.FwdHoursAvailable - getFwdPlannedHours(D)
     
     return v
 end

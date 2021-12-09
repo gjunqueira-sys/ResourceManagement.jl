@@ -118,7 +118,7 @@ mutable struct  DisciplineLabor <:LaborVariable
 
 
         
-        new(Budget(), 0.0, 0.0, Array{Float64, 1}(undef, 12), DataFrame(), DataFrame(), Array{Float64, 2}(undef, 12, 12),  Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12,12) ,
+        new(Budget(), 0.0, 0.0, Array{Float64, 1}(), DataFrame(), DataFrame(), Array{Float64, 2}(undef, 12, 12),  Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12,12) ,
         Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12, 12), "430300","", Array{String, 1}())
 
 
@@ -151,7 +151,7 @@ mutable struct  DisciplineLabor <:LaborVariable
     ```
     """
     function DisciplineLabor(Dept::String, Name::String, N::Int)     # Constructor that can specify number of months for Fwd and Rev Forecasts and also Dept
-        new(Budget(), 0.0, 0.0, Array{Float64, 1}(undef, N),  DataFrame(),  DataFrame(),  Array{Float64, 2}(undef, N, N), Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N),
+        new(Budget(), 0.0, 0.0, Array{Float64, 1}(),  DataFrame(),  DataFrame(),  Array{Float64, 2}(undef, N, N), Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N),
         Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N), Dept, Name, Array{String, 1}())
     end
 
