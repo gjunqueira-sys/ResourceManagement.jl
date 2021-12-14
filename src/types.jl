@@ -219,6 +219,12 @@ mutable struct  TeamLabor <:LaborVariable
 end
 
 
+# Defining how the types show up on Standard IO:
+Base.show(io::IO, D::DisciplineLabor) = print(io, "(👨, " , D.Name, ", ", D.Dept, ", Hello: Ready to help!")
+Base.show(io::IO, D::TeamLabor) = print(io, "(👨 , 👩  " , D.Name, ", ", D.Dept, ", Alpha Team ready to help!")
+
+
+
 
 
 
