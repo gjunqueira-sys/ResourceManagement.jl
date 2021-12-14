@@ -97,7 +97,10 @@ B = TeamDump(Team1, :TotalFwdPlannedHours) |> values |>collect
 
 TeamDump(Team1, :TotalRevActualHours) |> values |> take(3)
 
-minimum
+
+
+
+
 "TT = combine(Tony.FwdHoursForecast, months .=>sum)
 
 size(Tony.FwdHoursForecast)[2]
