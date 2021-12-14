@@ -42,6 +42,7 @@ export getDept
 export getRate
 export getCapacity
 export _getAvailMonthHours
+export fetchAndWriteRevActualHours!
 
 
 
@@ -50,6 +51,7 @@ export _getAvailMonthHours
 ## Function Implementations for LaborVariable Data Type:
 ## getters
 # function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable) end
+# function fetchAndWriteRevActualHours!(df::DataFrame, name::String, m::Int, D::LaborVariable)
 # function getFwdPlannedHours(D::LaborVariable, proj::String) end
 # function getRevPlannedHours(D::LaborVariable, proj::String) end
 # function writeAvailableFwdHours!(D::LaborVariable, df::DataFrame, m::Int) end
@@ -142,7 +144,7 @@ function _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
     T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast
     T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast
 
-    T.RevActualHours = x.RevActualHours + y.RevActualHours
+    T.RevActualHours = vcat(x.RevActualHours, y.RevActualHours) 
     T.RevActualCostHours = x.RevActualCostHours + y.RevActualCostHours
 
 
@@ -188,7 +190,7 @@ function _TeamBuilder(x::TeamLabor, y::DisciplineLabor)
     T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast
     T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast
 
-    T.RevActualHours = x.RevActualHours + y.RevActualHours
+    T.RevActualHours = vcat(x.RevActualHours, y.RevActualHours)
     T.RevActualCostHours = x.RevActualCostHours + y.RevActualCostHours
     
 
@@ -337,7 +339,22 @@ end
 
 
 
+function fetchAndWriteRevActualHours!(df::DataFrame, name::String, m::Int, D::LaborVariable)
 
+    df2 = _getEmployeeHoursFromDf(df, name, m, :actual)
+    
+    try
+        
+        [push!(D.Projects, p) for p in df2.Project if p ∉ D.Projects];
+    catch
+        @warn("undefined Projects")
+    end
+
+    
+    D.RevActualHours = copy(df2)
+    
+    return D
+end
 
 
 
