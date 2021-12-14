@@ -153,7 +153,8 @@ T2cap = getCapacity(Team2);
 
     @test getFwdAvailableMonthHours(Team1) == getFwdAvailableMonthHours(Tony) + getFwdAvailableMonthHours(Julie);
     
-
+    @test getRevActualHours(Team1, "") == getRevActualHours(Tony, "") + getRevActualHours(Julie, "");
+    @test getRevActualHours(Team2, "") == getRevActualHours(Tony, "") + getRevActualHours(Julie, "") + getRevActualHours(Brad, "");
 
 
 end
