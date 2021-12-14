@@ -43,6 +43,7 @@ export getRate
 export getCapacity
 export _getAvailMonthHours
 export fetchAndWriteRevActualHours!
+export getRevActualHours
 
 
 
@@ -446,6 +447,46 @@ function getRevPlannedHours(D::LaborVariable, proj::String = "")
 end
 
 
+
+
+
+
+"""
+    getRevActualHours(D::LaborVariable, proj::String)
+
+Function to get planned hours for a given project from a LaborVariable object.
+
+# Arguments
+- `D::LaborVariable`: LaborVariable object to get information from
+- `proj::String`: Project to get information for. If no project is given ("") or found,
+    function will return all projects.
+
+# Returns
+- `v::Vector`: Vector with planned hours for the project
+
+"""
+function getRevActualHours(D::LaborVariable, proj::String = "")
+    v=[]
+    months = names(D.RevActualHours)[2:end] #get only month columns
+
+    if (proj ∉  D.RevActualHours.Project)
+
+        
+        v = combine(D.RevActualHours, months .=>sum) #get combine hours per month
+        v = Vector(v[1,:]) #vector of hours per month
+        
+        
+    else
+        filter = D.RevActualHours.Project .== proj
+        v = combine(D.RevActualHours[filter, :], months .=>sum)
+        v = Vector(v[1,:]) #vector of hours per month for the selected project
+
+
+        
+    end
+    
+    return v
+end
 
 
 

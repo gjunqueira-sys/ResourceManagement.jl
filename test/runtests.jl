@@ -15,6 +15,7 @@ C = DisciplineLabor();
 A.Budget.Hours = 160.0;
 B.Budget.Hours = 200.0;
 C.Budget.Hours = 240.0;
+T=TeamLabor()
 T = A + B + C;
 
 
@@ -22,14 +23,18 @@ T = A + B + C;
 Tony = DisciplineLabor("430300", "Higa Anthony",  24);
 fetchAndWritePlannedHours!(dflabor, "HIGA ANTHONY", 24, Tony, :fwd);
 fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :rev);
+fetchAndWriteRevActualHours!(dfRev, "HIGA ANTHONY", 18, Tony);
 
 Julie = DisciplineLabor("430300", "BRIONES JULITA",  24);
 fetchAndWritePlannedHours!(dflabor, "BRIONES JULITA", 24, Julie, :fwd);
 fetchAndWritePlannedHours!(dfRev, "BRIONES JULITA", 18, Julie, :rev);
+fetchAndWriteRevActualHours!(dfRev, "BRIONES JULITA", 18, Julie);
+
 
 Brad = DisciplineLabor("430300", "BORDEN BRADLEY",  24);
 fetchAndWritePlannedHours!(dflabor, "BORDEN BRADLEY", 24, Brad, :fwd);
 fetchAndWritePlannedHours!(dfRev, "BORDEN BRADLEY", 18, Brad, :rev);
+fetchAndWriteRevActualHours!(dfRev, "BORDEN BRADLEY", 18, Brad);
 
 
 
@@ -55,6 +60,7 @@ Va = Tony.FwdHoursAvailable;
 Vpr = getRevPlannedHours(Tony, "");
 Vp1r = getRevPlannedHours(Tony, "153804");
 Vp2r = getRevPlannedHours(Tony, "154558");
+Tactual = getRevActualHours(Tony, "");
 
 
 TU1 = getFwdUtilization(Tony, "");
@@ -63,10 +69,12 @@ TU3 = getFwdUtilization(Tony, "154558");
 
 J1 = getFwdPlannedHours(Julie, "");
 J1R = getRevPlannedHours(Julie, "");
+Jactual = getRevActualHours(Julie, "");
 
 
 B1 = getFwdPlannedHours(Brad, "");
 B1R = getRevPlannedHours(Brad, "");
+Bactual = getRevActualHours(Brad, "");
 
 Tcap = getCapacity(Tony);
 Jcap = getCapacity(Julie);
@@ -103,6 +111,9 @@ T2cap = getCapacity(Team2);
     @test sum(getFwdPlannedHours(Tony, "154558")) == 200.0
     @test sum(getRevPlannedHours(Tony, "154558")) == 300.0
     @test sum(getRevPlannedHours(Tony, "")) == 2233;
+    @test sum(getRevActualHours(Tony, "")) == 2937;
+
+
 
     # @test  sum(Va .*(getFwdUtilization(Tony, "")))== 1446;
     @test sum(Tony.FwdHoursAvailable)[1] == 4016
@@ -111,7 +122,7 @@ T2cap = getCapacity(Team2);
     # @test getProjects(Tony) == ["152242", "153804" , "154558", "154662", "IND-43", "NZ430300"];
     @test sum(getCapacity(Tony)) == 2570;
     @test sum(getCapacity(Tony)) == (sum(getFwdAvailableMonthHours(Tony)) - sum(getFwdPlannedHours(Tony, "")))
-
+   
     
 
 
@@ -124,12 +135,16 @@ T2cap = getCapacity(Team2);
     @test sum(getFwdAvailableMonthHours(Julie))== 4016
     # @test getProjects(Julie) == ["150547", "152242", "154662", "156257", "NZ430300"]
     @test sum(getRevPlannedHours(Julie, "")) == 2802;
+    @test sum(getRevActualHours(Julie, "")) == 3216;
+
 
 
     @test sum(getFwdPlannedHours(Brad, "")) == 3821;
     @test sum(getFwdPlannedHours(Brad, "154644")) == 344;
     # @test getProjects(Brad) == ["154644", "154662", "158070"]
     @test sum(getRevPlannedHours(Brad, "")) == 2727;
+    @test sum(getRevActualHours(Brad, "")) == 3369;
+
 
     @test getFwdPlannedHours(Team1, "") == getFwdPlannedHours(Tony, "") + getFwdPlannedHours(Julie, "");
     @test getRevPlannedHours(Team1, "") == getRevPlannedHours(Tony, "") + getRevPlannedHours(Julie, "");
