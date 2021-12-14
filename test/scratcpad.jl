@@ -81,7 +81,7 @@ Team1 = Tony + Julie
 take(n::Int) = xs -> xs[1:min(n,end)]
 
 
-TeamDump(Team1, :TotalFwdPlannedHours)
+t = TeamDump(Team1, :TotalFwdPlannedHours)
 TeamDump(Team1, :TotalRevPlannedHours)
 TeamDump(Team1, :TotalRevActualHours)
 TeamDump(Team1, :FwdUtilization)
@@ -95,7 +95,7 @@ A = TeamDump(Team1, :TotalFwdPlannedHours) |> values |>collect |>minimum |> take
 B = TeamDump(Team1, :TotalFwdPlannedHours) |> values |>collect
 
 
-TeamDump(Team1, :TotalRevActualHours) |> values |>collect |> take(2)
+TeamDump(Team1, :TotalRevActualHours) |> values |> take(3)
 
 minimum
 "TT = combine(Tony.FwdHoursForecast, months .=>sum)
