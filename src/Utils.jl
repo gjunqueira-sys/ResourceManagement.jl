@@ -7,6 +7,7 @@ using DataFrames
 
 
 
+
 """
     ReadLaborTracker(fName::String)
 
@@ -69,6 +70,57 @@ function ReadAvailHours(fName::String)
 end
 
 
+
+"""
+    vec_to_dic(v_vals::Vector, v_keys::Vector)
+
+Function to convert vector pair to Dictionary format
+
+# Arguments
+- `v_vals::Vector`: vector of values
+- `v_keys::Vector`: vector of keys
+
+# Returns
+- `dic::Dictionary`: Dictionary
+
+"""
+function vec_to_dic(v_vals::Vector, v_keys::Vector)
+
+    @assert length(v_vals) == length(v_keys) "Vector lengths must match!"
+
+    dic = Dict();
+    for i = 1:length(v_vals)
+        dic[v_keys[i]] = v_vals[i];
+    end
+
+    return dic;
+end
+
+
+
+
+"""
+    dic_to_vec(dic::Dict)
+Function to return Dictionary key:value pair  as two vectors: keys and values
+
+# Arguments
+- `dic::Dict`: Dictionary
+
+# Returns
+- `v_keys::Vector`: vector of keys
+- `v_vals::Vector`: vector of values
+"""
+function dic_to_vec(dic::Dict)
+
+    v_keys = [];
+    v_vals = [];
+    for k in keys(dic), v in values(dic)
+        push!(v_keys, k);
+        push!(v_vals, v);
+    end
+
+    return v_keys, v_vals;
+end
 
 
 
