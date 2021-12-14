@@ -4,6 +4,9 @@ A = DisciplineLabor()
 B = DisciplineLabor()
 
 
+
+
+
 dflabor = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_PLANNED_FWD24_NOV.csv"); 
 vh, pv = _getEmployeePlannedHours(dflabor, "HIGA ANTHONY", 24)
 
@@ -59,17 +62,87 @@ fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :plan);
 
 
 
-Tony = fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :rev);
-Tony = fetchAndWritePlannedHours!(dflabor, "HIGA ANTHONY", 24, Tony, :fwd);
+fetchAndWritePlannedHours!(dfRev, "HIGA ANTHONY", 18, Tony, :rev);
+fetchAndWritePlannedHours!(dflabor, "HIGA ANTHONY", 24, Tony, :fwd);
+fetchAndWriteRevActualHours!(dfRev, "HIGA ANTHONY", 18, Tony);
 
 
 Julie = fetchAndWritePlannedHours!(dfRev, "BRIONES JULITA", 18, Julie, :rev);
 Julie = fetchAndWritePlannedHours!(dflabor, "BRIONES JULITA", 24, Julie, :fwd);
+fetchAndWriteRevActualHours!(dfRev, "BRIONES JULITA", 18, Julie);
+
+
+writeAvailableFwdHours!(Tony, dfAvail, 24);
+writeAvailableFwdHours!(Julie, dfAvail, 24);
+
+Team1 = Tony + Julie
 
 
 
-Tony + Julie
+"""
+    function TeamDump(Team::TeamLabor, target::Symbol)
 
+Function to iterate over all Team Resources and output `target` field as Dict pairs
+
+# Arguments
+`Team::TeamLabor`: TeamLabor object
+`target::Symbol`: Symbol of field to dump
+        targets:
+            :TotalFwdPlannedHours (monthly FwdPlannedHours vector for all projects)
+
+
+# Returns
+`Dict`: Dict of Team Resources with `target` field
+        Keys are Employee names
+        Values are Dict of `target` field
+"""
+function TeamDump(Team::TeamLabor, target::Symbol)
+    dict = Dict()
+    v_nam=[] #vector of names
+    v_vals=[] #vector of values
+
+    for i in 1:length(Team.Team)
+        push!(v_nam, Team.Team[i].Name)
+    end
+
+    if target == :TotalFwdPlannedHours
+
+        for i in 1:length(Team.Team)
+            push!(v_vals, getFwdPlannedHours(Team.Team[i], "") )
+        end
+
+    elseif target == :TotalRevPlannedHours
+            
+            for i in 1:length(Team.Team)
+                push!(v_vals, getRevPlannedHours(Team.Team[i], "") )
+            end
+
+        elseif target == :TotalRevActualHours
+            
+            for i in 1:length(Team.Team)
+                push!(v_vals, getRevActualHours(Team.Team[i], "") )
+            end
+
+        elseif target == :FwdUtilization
+            
+            for i in 1:length(Team.Team)
+                push!(v_vals, getFwdUtilization(Team.Team[i]) )
+            end
+    end
+
+    dict = vec_to_dic(v_nam, v_vals)
+
+    return dict
+    
+end
+
+
+TeamDump(Team1, :TotalFwdPlannedHours)
+TeamDump(Team1, :TotalRevPlannedHours)
+TeamDump(Team1, :TotalRevActualHours)
+TeamDump(Team1, :FwdUtilization)
+
+TeamDump(Team1, :FwdUtilization) |> values |> collect |> mean
 
 
 TT = combine(Tony.FwdHoursForecast, months .=>sum)

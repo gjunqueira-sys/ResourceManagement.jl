@@ -26,6 +26,8 @@ using .types: LaborVariable # Brings Laborvariable data type into scope.
 include("Utils.jl");
 using .Utils: ReadLaborTracker
 using .Utils: ReadAvailHours
+using .Utils: dic_to_vec
+using .Utils: vec_to_dic
 
 
 # exports
@@ -44,6 +46,8 @@ export getCapacity
 export _getAvailMonthHours
 export fetchAndWriteRevActualHours!
 export getRevActualHours
+export dic_to_vec, vec_to_dic
+export TeamDump
 
 
 
@@ -572,14 +576,13 @@ If  the given project is not found, function will return utilization for all pro
     V = getUtilization(JohnDoe, "")
 ```
 """
-function getFwdUtilization(D::LaborVariable, proj::String)
+function getFwdUtilization(D::LaborVariable, proj::String = "")
     v=[];
-    if (proj ∉  D.Projects)
-        getFwdPlannedHours(D) ./ D.FwdHoursAvailable
-        
-        
+    if (proj ∈  D.Projects)
+        v = (getFwdPlannedHours(D, proj)) ./ (D.FwdHoursAvailable)
+
     else 
-        getFwdPlannedHours(D, proj) ./ D.FwdHoursAvailable
+        v = (getFwdPlannedHours(D)) ./ (D.FwdHoursAvailable)
         
     end
 
@@ -609,6 +612,76 @@ function getCapacity(D::LaborVariable)
     
     return v
 end
+
+
+
+
+### TEAM LEVEL FUNCTIONS (THAT RETURN ALL MEMBERS OF THE TEAM ON DICTIONARY FORM)
+
+
+"""
+    function TeamDump(Team::TeamLabor, target::Symbol)
+
+Function to iterate over all Team Resources and output `target` field as Dict pairs
+
+# Arguments
+`Team::TeamLabor`: TeamLabor object
+`target::Symbol`: Symbol of field to dump
+        targets:
+            :TotalFwdPlannedHours (monthly FwdPlannedHours vector for all projects)
+
+
+# Returns
+`Dict`: Dict of Team Resources with `target` field
+        Keys are Employee names
+        Values are Dict of `target` field
+"""
+function TeamDump(Team::TeamLabor, target::Symbol)
+    dict = Dict()
+    v_nam=[] #vector of names
+    v_vals=[] #vector of values
+
+    for i in 1:length(Team.Team)
+        push!(v_nam, Team.Team[i].Name)
+    end
+
+    if target == :TotalFwdPlannedHours
+
+        for i in 1:length(Team.Team)
+            push!(v_vals, getFwdPlannedHours(Team.Team[i], "") )
+        end
+
+    elseif target == :TotalRevPlannedHours
+            
+            for i in 1:length(Team.Team)
+                push!(v_vals, getRevPlannedHours(Team.Team[i], "") )
+            end
+
+        elseif target == :TotalRevActualHours
+            
+            for i in 1:length(Team.Team)
+                push!(v_vals, getRevActualHours(Team.Team[i], "") )
+            end
+
+        elseif target == :FwdUtilization
+            
+            for i in 1:length(Team.Team)
+                push!(v_vals, getFwdUtilization(Team.Team[i]) )
+            end
+    end
+
+    dict = vec_to_dic(v_nam, v_vals)
+
+    return dict
+    
+end
+
+
+
+
+
+
+
 
 
 

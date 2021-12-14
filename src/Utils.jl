@@ -84,7 +84,7 @@ Function to convert vector pair to Dictionary format
 - `dic::Dictionary`: Dictionary
 
 """
-function vec_to_dic(v_vals::Vector, v_keys::Vector)
+function vec_to_dic(v_keys::Vector, v_vals::Vector)
 
     @assert length(v_vals) == length(v_keys) "Vector lengths must match!"
 
