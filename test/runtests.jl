@@ -9,6 +9,9 @@ dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
 dfRev = ReadLaborTracker("src\\TEAM_ACTUALPLAN_REV18.csv"); 
 # dfRev = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_ACTUALPLAN_REV18.csv"); 
 
+
+dfcost = ReadCostTracker("src\\costracker.csv");
+
 A = DisciplineLabor();
 B = DisciplineLabor();
 C = DisciplineLabor();

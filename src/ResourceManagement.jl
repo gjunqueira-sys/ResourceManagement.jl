@@ -28,6 +28,7 @@ using .Utils: ReadLaborTracker
 using .Utils: ReadAvailHours
 using .Utils: dic_to_vec
 using .Utils: vec_to_dic
+using .Utils: ReadCostTracker
 
 
 # exports
@@ -48,6 +49,7 @@ export fetchAndWriteRevActualHours!
 export getRevActualHours
 export dic_to_vec, vec_to_dic
 export TeamDump
+export ReadCostTracker
 
 
 
@@ -294,6 +296,12 @@ function _getEmployeeHoursFromDf(df::DataFrame, name::String, m::Int, col::Symbo
 
     return dfg_hours_per_month_per_name
 end
+
+
+
+
+
+
 
 
 
@@ -679,10 +687,36 @@ end
 
 
 
+### cost tracker
+
+function _getCostTrackerFromDf(df::DataFrame, Pnumber::Int, Dept::String)
+
+    if Dept == "430300"
+        strC = "CONT"
+    elseif Dept == "430400"
+        strM = "MECH"
+    end
+
+    filter = (df."Project Definition").==Pnumber & (df."Sub - product line").==Dept
+    df = df[filter,:]
+    
+
+    return df
+end
 
 
 
 
+function fetchAndWriteProject!(df::DataFrame, p::Project)
+
+    df2 = _CostTrackerFromDf(df, p.Number)
+    
+    
+    
+   
+    
+    return D
+end
 
 
 
