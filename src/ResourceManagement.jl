@@ -22,6 +22,9 @@ include("types.jl");
 using .types: TeamLabor  # Brings Team labor data type into scope.
 using .types: DisciplineLabor  # Brings Discipline labor data type into scope.
 using .types: LaborVariable # Brings Laborvariable data type into scope.
+using .types: Budget
+using .types: Cost
+using .types: Project
 
 include("Utils.jl");
 using .Utils: ReadLaborTracker
@@ -32,7 +35,7 @@ using .Utils: ReadCostTracker
 
 
 # exports
-export DisciplineLabor, TeamLabor
+export DisciplineLabor, TeamLabor, Cost, Budget, Project
 export +
 export Statistics, mean
 export ReadLaborTracker, ReadAvailHours, getAvailMonthHours, writeAvailableFwdHours!
@@ -50,6 +53,7 @@ export getRevActualHours
 export dic_to_vec, vec_to_dic
 export TeamDump
 export ReadCostTracker
+export fetchAndWriteProjectFinances!
 
 
 
@@ -689,15 +693,30 @@ end
 
 ### cost tracker
 
+"""
+    _getCostTrackerFromDf(df::DataFrame, Pnumber::Int, Dept::String)
+
+Function to return  cost data relative to a given project number and department.
+
+# Arguments
+- `df::DataFrame`: DataFrame (output of ReadCostTracker)
+- `Pnumber::Int`: Project number to get cost data for
+- `Dept::String`: Department to get cost data for
+
+# Returns
+- `df:: DataFrame`: DataFrame with cost data for the given project and department
+
+
+"""
 function _getCostTrackerFromDf(df::DataFrame, Pnumber::Int, Dept::String)
 
     if Dept == "430300"
         strC = "CONT"
-    elseif Dept == "430400"
+    elseif Dept == "430400" # need to be verified
         strM = "MECH"
     end
 
-    filter = (df."Project Definition").==Pnumber & (df."Sub - product line").==Dept
+    filter = ((df."Project Definition").==Pnumber) .& (occursin.(strC, df."Sub - product line"))
     df = df[filter,:]
     
 
@@ -707,16 +726,46 @@ end
 
 
 
-function fetchAndWriteProject!(df::DataFrame, p::Project)
+function fetchAndWriteProjectFinances!(df::DataFrame, Pnumber::Int, Dept::String, p::Project)
 
-    df2 = _CostTrackerFromDf(df, p.Number)
+    df2 = _getCostTrackerFromDf(df, Pnumber, Dept); #get cost data for project relative to department and project number
+
+    # create budget to push
+    b = Budget(); #constructor for budget object
+
+    b.Dept = Dept;
+    b.QuotedDollars_HDWR = parse(Float64, df2.Quoted[1]); #HDWR is always position 1
+    b.QuotedDollars_ENG = parse(Float64, df2.Quoted[2]); #ENG is always position 2
+    b.QuotedDollars_RESALE = parse(Float64, df2.Quoted[3]); #RESALE is always position 3
+
+    # create cost to push
+    c = Cost(); #constructor for cost object
+
+    c.Dept = Dept;
+
+    c.Actual_HDWR = parse(Float64, df2.Actual[1]) ; #HDWR is always position 1
+    c.Actual_ENG = parse(Float64, df2.Actual[2]); #ENG is always position 2
+    c.Actual_RESALE = parse(Float64, df2.Actual[3]); #RESALE is always position 3
+
+    c.Anticipated_HDWR = parse(Float64, df2."Antic."[1]); #HDWR is always position 1
+    c.Anticipated_ENG = parse(Float64, df2."Antic."[2]); #ENG is always position 2
+    c.Anticipated_RESALE = parse(Float64, df2."Antic."[3]); #RESALE is always position 3
+
+    c.Projected_HDWR = parse(Float64, df2.Projected[1]); #HDWR is always position 1
+    c.Projected_ENG = parse(Float64, df2.Projected[2]); #eng is always position 2
+    c.Projected_RESALES = parse(Float64, df2.Projected[3]); #RESALE is always position 3
+
+
+    # write to p object
+    p.Number = df2."Project Definition"[1]; #project number
+    p.Customer = df2."Project Description"[1]; #customer
+    push!(p.Budget, b); #push budget to project
+    push!(p.Cost, c); #push cost to project
+
+    return p
     
-    
-    
-   
-    
-    return D
 end
+
 
 
 

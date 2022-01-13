@@ -5,6 +5,10 @@ using DataFrames
 # Abstract class for all resource modules
 abstract type ResourceVariable end
 
+abstract type ProgramVariable end
+
+abstract type ProjectVariable <: ProgramVariable end
+
 abstract type LaborVariable <: ResourceVariable end
 
 abstract type FinanceVariable end 
@@ -25,24 +29,81 @@ abstract type CostVariable <: FinanceVariable end
 
 # Fields
 `Hours::Real` : Stores Budget Hours for the Object
-`Dollars::Real` : Stores Budget Dollars for the Object
+`QuotedDollars::Real` : Stores Budget Dollars for the Object
 `Rate::Real` : Stores Budget Rate for the Object (dollars per hour)
 `TravelDollars::Real` : Stores Budget Travel Dollars for the Object
 """
 mutable struct Budget <: BudgetVariable
+    Dept ::String
+    Hours::Real                 # Budget in hours
+    Rate::Real                  # Rate of dollars per hour
+    TravelDollars::Real         # Budget in dollars for travel
 
-    Hours::Real          # Budget in hours
-    Dollars::Real        # Budget in dollars used
-    Rate::Real                 # Rate of dollars per hour
-    TravelDollars::Real        # Budget in dollars for travel
+    QuotedDollars_ENG::Real         # Budget in dollars used for quoted costs
+    Var_ENG :: Real                  # Difference between quoted budget and Projected costs
 
-    function Budget() # Standard Constructor Function
+    QuotedDollars_HDWR::Real         # Budget in dollars used for quoted costs
+    Var_HDWR :: Real                  # Difference between quoted budget and Projected costs
 
-        new(0.0, 0.0, 0.0, 0.0)
+    QuotedDollars_RESALE::Real         # Budget in dollars used for quoted costs
+    Var_RESALE :: Real                  # Difference between quoted budget and Projected costs
+
+    function Budget()           # Standard Constructor Function
+
+        new("", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         
     end
 
 end
+
+
+mutable struct Cost <: CostVariable
+
+    Dept::String
+
+    ActualHours::Real           # Cost in hours
+    ActualTravel::Real          # Cost in dollars for travel
+
+    Actual_ENG::Real                # Cost in dollars used for quoted costs
+    Anticipated_ENG:: Real          # Cost in dollars for anticipated costs
+    Projected_ENG:: Real            # Cost in dollars for projected costs
+
+    Actual_HDWR::Real                # Cost in dollars used for quoted costs
+    Anticipated_HDWR:: Real          # Cost in dollars for anticipated costs
+    Projected_HDWR:: Real            # Cost in dollars for projected costs
+
+    Actual_RESALES::Real                # Cost in dollars used for quoted costs
+    Anticipated_RESALES:: Real          # Cost in dollars for anticipated costs
+    Projected_RESALES:: Real            # Cost in dollars for projected costs
+
+
+    function Cost() # Standard Constructor Function
+
+        new("", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        
+    end
+
+end
+
+
+
+
+
+mutable struct Project <: ProjectVariable 
+    Number :: Int               # Project Number
+    Customer:: String           # Customer Name
+
+    Budget::Array{Budget, 1}              # Budget for the Project
+    Cost:: Array{Cost, 1}                  # Cost for the Project
+
+    function Project() # Standard Constructor Function
+
+        new(0, "", Array{Budget, 1}(), Array{Cost, 1}());
+        
+    end
+
+end
+
 
 
 

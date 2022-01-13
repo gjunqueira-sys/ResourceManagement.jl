@@ -38,6 +38,45 @@ function ReadLaborTracker(fName::String)
 end
 
 
+"""
+    ReadCostTracker(fName::String)
+
+Function to read cost tracker report from SAP.
+On SAP Report, you would input all project numbers which you may be interested. The report will pull them all.
+
+# Arguments
+- `fName::String`: filename of the report
+
+# Returns
+- `df::DataFrame`: DataFrame of the report
+
+"""
+function ReadCostTracker(fName::String)
+    # This function takes report from SAP and saved as CSV file
+    # Report from SAP to generate report: Cost Tracker - Sub Product Line
+
+
+
+    df = CSV.read(fName, DataFrame)
+    df = dropmissing(df, :"Sub - product line");
+
+    sum(occursin.("," , df.Quoted)) > 0 ? df.Quoted = replace.(df.Quoted, "," => "") : ();
+    sum(occursin.(",", df.Projected)) > 0 ?  df.Projected = replace.(df.Projected, "," => "") : ();
+    sum(occursin.(",", df.Actual)) > 0 ?  df.Actual = replace.(df.Actual, "," => "") : ();
+    # df.Actual = replace.(df.Actual, "," => "");
+    # df.Var = replace.(df.Var, "," => "");
+    # df.:"Antic." = replace.(df."Antic.", "," => "");
+
+    # df.Quoted = parse.(Float64, df.Quoted);
+    # df.Projected = parse.(Float64, df.Projected);
+    # df.Actual = parse.(Float64, df.Actual);
+    # df.Var = parse.(Float64, df.Var);
+    # df.:"Antic." = parse.(Float64, df."Antic.");
+
+    return df;
+
+end
+
 
 
 """

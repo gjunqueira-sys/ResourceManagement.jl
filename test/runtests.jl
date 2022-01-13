@@ -1,6 +1,7 @@
 using ResourceManagement
 using DataFrames
 using Test
+using CSV
 
 dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
 # dflabor = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_PLANNED_FWD24_NOV.csv"); 
@@ -11,6 +12,11 @@ dfRev = ReadLaborTracker("src\\TEAM_ACTUALPLAN_REV18.csv");
 
 
 dfcost = ReadCostTracker("src\\costracker.csv");
+## costs
+p149529 = Project();
+fetchAndWriteProjectFinances!(dfcost, 149529, "430300", p149529);
+
+dfcost2 = CSV.read("src\\costracker.csv", DataFrame)
 
 A = DisciplineLabor();
 B = DisciplineLabor();
