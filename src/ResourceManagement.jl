@@ -25,6 +25,7 @@ using .types: LaborVariable # Brings Laborvariable data type into scope.
 using .types: Budget
 using .types: Cost
 using .types: Project
+using .types: Program
 
 include("Utils.jl");
 using .Utils: ReadLaborTracker
@@ -252,6 +253,24 @@ Extends Base.+ to add TeamLabor and DisciplineLabor together.
 """
 function +(x::TeamLabor , y::DisciplineLabor)
     _TeamBuilder(x , y)
+end
+
+
+
+"""
+    Base.+(p1::Project , p2::Project)
+Extends Base.+ to add two Project objects together.
+
+# Arguments
+- `p1::Project`: First Project object to add
+- `p2::Project`: Second Project object to add
+
+# Returns
+- Nothing. Function calls _ProgramBuilder to add two Project objects together.
+
+"""
+function +(p1::Project , p2::Project)
+    _ProgramBuilder(p1 , p2)
 end
 
 
@@ -738,6 +757,10 @@ function fetchAndWriteProjectFinances!(df::DataFrame, Pnumber::Int, Dept::String
     b.QuotedDollars_ENG = df2.Quoted[2]; #ENG is always position 2
     b.QuotedDollars_RESALE = df2.Quoted[3]; #RESALE is always position 3
 
+    b.Var_HDWR = df2.Var[1] ; #HDWR is always position 1
+    b.Var_ENG = df2.Var[2] ; #ENG is always position 2
+    b.Var_RESALE = df2.Var[3] ; #RESALE is always position 3
+
     # create cost to push
     c = Cost(); #constructor for cost object
 
@@ -766,6 +789,29 @@ function fetchAndWriteProjectFinances!(df::DataFrame, Pnumber::Int, Dept::String
     
 end
 
+
+
+"""
+    _ProgramBuilder(p1::Project, p2::Project)
+
+Function to build a Program object from two Project objects. A Program is a collection of Projects.
+
+# Arguments
+- `p1::Project`: Project object to build Program from
+- `p2::Project`: Project object to build Program from
+
+# Returns
+- `p::Program`: Program object built from p1 and p2
+
+"""
+function _ProgramBuilder(p1::Project, p2::Project)
+    p = Program(); #constructor for program object
+
+    push!(p.Projects, p1);
+    push!(p.Projects, p2);
+
+    return p
+end
 
 
 

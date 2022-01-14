@@ -106,6 +106,27 @@ end
 
 
 
+"""
+    Program <: ProgramVariable
+
+    # Fields
+    `Projects::Array{Project, 1}` : Stores the Projects for the Program
+    `Name::String` : Stores the Name of the Program
+
+"""
+mutable struct Program <: ProgramVariable
+    Name :: String              # Program Name
+    Projects :: Array{Project, 1} # Projects in the Program
+    function Program() # Standard Constructor Function
+
+        new("", Array{Project, 1}());
+        
+    end
+
+end
+
+
+
 
 """
     DisciplineLabor
