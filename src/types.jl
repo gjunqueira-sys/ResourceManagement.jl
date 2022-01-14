@@ -72,9 +72,9 @@ mutable struct Cost <: CostVariable
     Anticipated_HDWR:: Real          # Cost in dollars for anticipated costs
     Projected_HDWR:: Real            # Cost in dollars for projected costs
 
-    Actual_RESALES::Real                # Cost in dollars used for quoted costs
-    Anticipated_RESALES:: Real          # Cost in dollars for anticipated costs
-    Projected_RESALES:: Real            # Cost in dollars for projected costs
+    Actual_RESALE::Real                # Cost in dollars used for quoted costs
+    Anticipated_RESALE:: Real          # Cost in dollars for anticipated costs
+    Projected_RESALE:: Real            # Cost in dollars for projected costs
 
 
     function Cost() # Standard Constructor Function

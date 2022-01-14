@@ -734,26 +734,26 @@ function fetchAndWriteProjectFinances!(df::DataFrame, Pnumber::Int, Dept::String
     b = Budget(); #constructor for budget object
 
     b.Dept = Dept;
-    b.QuotedDollars_HDWR = parse(Float64, df2.Quoted[1]); #HDWR is always position 1
-    b.QuotedDollars_ENG = parse(Float64, df2.Quoted[2]); #ENG is always position 2
-    b.QuotedDollars_RESALE = parse(Float64, df2.Quoted[3]); #RESALE is always position 3
+    b.QuotedDollars_HDWR =  df2.Quoted[1]; #HDWR is always position 1
+    b.QuotedDollars_ENG = df2.Quoted[2]; #ENG is always position 2
+    b.QuotedDollars_RESALE = df2.Quoted[3]; #RESALE is always position 3
 
     # create cost to push
     c = Cost(); #constructor for cost object
 
     c.Dept = Dept;
 
-    c.Actual_HDWR = parse(Float64, df2.Actual[1]) ; #HDWR is always position 1
-    c.Actual_ENG = parse(Float64, df2.Actual[2]); #ENG is always position 2
-    c.Actual_RESALE = parse(Float64, df2.Actual[3]); #RESALE is always position 3
+    c.Actual_HDWR = df2.Actual[1] ; #HDWR is always position 1
+    c.Actual_ENG = df2.Actual[2]; #ENG is always position 2
+    c.Actual_RESALE = df2.Actual[3]; #RESALE is always position 3
 
-    c.Anticipated_HDWR = parse(Float64, df2."Antic."[1]); #HDWR is always position 1
-    c.Anticipated_ENG = parse(Float64, df2."Antic."[2]); #ENG is always position 2
-    c.Anticipated_RESALE = parse(Float64, df2."Antic."[3]); #RESALE is always position 3
+    c.Anticipated_HDWR = df2."Antic."[1]; #HDWR is always position 1
+    c.Anticipated_ENG = df2."Antic."[2]; #ENG is always position 2
+    c.Anticipated_RESALE = df2."Antic."[3]; #RESALE is always position 3
 
-    c.Projected_HDWR = parse(Float64, df2.Projected[1]); #HDWR is always position 1
-    c.Projected_ENG = parse(Float64, df2.Projected[2]); #eng is always position 2
-    c.Projected_RESALES = parse(Float64, df2.Projected[3]); #RESALE is always position 3
+    c.Projected_HDWR = df2.Projected[1]; #HDWR is always position 1
+    c.Projected_ENG = df2.Projected[2]; #eng is always position 2
+    c.Projected_RESALE = df2.Projected[3]; #RESALE is always position 3
 
 
     # write to p object

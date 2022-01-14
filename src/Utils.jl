@@ -60,18 +60,32 @@ function ReadCostTracker(fName::String)
     df = CSV.read(fName, DataFrame)
     df = dropmissing(df, :"Sub - product line");
 
-    sum(occursin.("," , df.Quoted)) > 0 ? df.Quoted = replace.(df.Quoted, "," => "") : ();
-    sum(occursin.(",", df.Projected)) > 0 ?  df.Projected = replace.(df.Projected, "," => "") : ();
-    sum(occursin.(",", df.Actual)) > 0 ?  df.Actual = replace.(df.Actual, "," => "") : ();
-    # df.Actual = replace.(df.Actual, "," => "");
-    # df.Var = replace.(df.Var, "," => "");
-    # df.:"Antic." = replace.(df."Antic.", "," => "");
+    if (df.Quoted[1] |> typeof |> supertype == InlineString)
+        sum(occursin.("," , df.Quoted)) > 0 ? df.Quoted = replace.(df.Quoted, "," => "") : ();
+        df.Quoted = parse.(Float64, df.Quoted);
+    end
 
-    # df.Quoted = parse.(Float64, df.Quoted);
-    # df.Projected = parse.(Float64, df.Projected);
-    # df.Actual = parse.(Float64, df.Actual);
-    # df.Var = parse.(Float64, df.Var);
-    # df.:"Antic." = parse.(Float64, df."Antic.");
+    if (df.Projected[1] |> typeof |> supertype == InlineString)
+        sum(occursin.("," , df.Projected)) > 0 ? df.Projected = replace.(df.Projected, "," => "") : ();
+        df.Projected = parse.(Float64, df.Projected);
+    end
+
+    if (df.Actual[1] |> typeof |> supertype == InlineString)
+        sum(occursin.("," , df.Actual)) > 0 ? df.Actual = replace.(df.Actual, "," => "") : ();
+        df.Actual = parse.(Float64, df.Actual);
+    end
+    
+    if (df.:"Antic."[1] |> typeof |> supertype == InlineString)
+        sum(occursin.("," , df.:"Antic.")) > 0 ? df.:"Antic." = replace.(df.:"Antic.", "," => "") : ();
+        df.:"Antic." = parse.(Float64, df.:"Antic.");
+    end
+
+   
+    if (df.Var[1] |> typeof |> supertype == InlineString)
+        sum(occursin.("," , df.Var)) > 0 ? df.Var = replace.(df.Var, "," => "") : ();
+        df.Var = parse.(Float64, df.Var);
+    end
+    
 
     return df;
 
