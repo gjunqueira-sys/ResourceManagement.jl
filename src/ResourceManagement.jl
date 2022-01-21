@@ -35,6 +35,9 @@ using .Utils: vec_to_dic
 using .Utils: ReadCostTracker
 
 
+include("MacrosUtils.jl");
+using .MacrosUtils: @prettyPrint
+
 # exports
 export DisciplineLabor, TeamLabor, Cost, Budget, Project, Program
 export +
@@ -56,7 +59,8 @@ export TeamDump
 export ReadCostTracker
 export fetchAndWriteProjectFinances!
 
-
+# export Macros
+export @prettyPrint
 
 
 
@@ -680,7 +684,7 @@ Function to iterate over all Team Resources and output `target` field as Dict pa
         Keys are Employee names
         Values are Dict of `target` field
 """
-function TeamDump(Team::TeamLabor, target::Symbol)
+function TeamDump(Team::TeamLabor, target::Symbol = :TotalFwdPlannedHours)
     dict = Dict()
     v_nam=[] #vector of names
     v_vals=[] #vector of values

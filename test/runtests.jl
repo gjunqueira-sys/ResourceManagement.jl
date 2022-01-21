@@ -114,6 +114,14 @@ Bcap = getCapacity(Brad);
 T1cap = getCapacity(Team1);
 T2cap = getCapacity(Team2);
 
+TeamDump(Team1)
+TeamDump(Team2)
+
+#### Macros
+@prettyPrint Tony -> All
+
+
+
 
 
 @testset "ResourceManagement.jl" begin
