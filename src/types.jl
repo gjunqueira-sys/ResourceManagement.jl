@@ -307,9 +307,8 @@ end
 # Defining how the types show up on Standard IO:
 Base.show(io::IO, D::DisciplineLabor) = print(io, "(👨, " , D.Name, ", ", D.Dept, ", Hello: Ready to help!")
 Base.show(io::IO, D::TeamLabor) = print(io, "(👨 , 👩  " , D.Name, ", ", D.Dept, ", Alpha Team ready to help!")
-
-
-
+Base.show(io::IO, p::Project) = print(io, "(💼, " , p.Number, ", ", p.Customer, ", Make every Project a Success 💪🏻 before it even begins!")
+Base.show(io::IO, p::Program) = print(io, "(💼, 💼, " , p.Name,  ", Program launched! 🚀🚀🚀")
 
 
 

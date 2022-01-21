@@ -36,7 +36,7 @@ using .Utils: ReadCostTracker
 
 
 # exports
-export DisciplineLabor, TeamLabor, Cost, Budget, Project
+export DisciplineLabor, TeamLabor, Cost, Budget, Project, Program
 export +
 export Statistics, mean
 export ReadLaborTracker, ReadAvailHours, getAvailMonthHours, writeAvailableFwdHours!
