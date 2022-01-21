@@ -90,15 +90,18 @@ end
 
 
 mutable struct Project <: ProjectVariable 
-    Number :: Int               # Project Number
+    Number :: String              # Project Number
     Customer:: String           # Customer Name
 
     Budget::Array{Budget, 1}              # Budget for the Project
     Cost:: Array{Cost, 1}                  # Cost for the Project
 
+    FwdHoursForecast::DataFrame         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.   
+    RevHoursForecast::DataFrame          # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted.
+
     function Project() # Standard Constructor Function
 
-        new(0, "", Array{Budget, 1}(), Array{Cost, 1}());
+        new("", "", Array{Budget, 1}(), Array{Cost, 1}(), DataFrame(), DataFrame());
         
     end
 

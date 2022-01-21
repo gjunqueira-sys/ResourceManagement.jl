@@ -141,7 +141,14 @@ function _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
     T.Name = x.Name * " & " * y.Name
     T.Budget.Rate = Statistics.mean(x.Budget.Rate, y.Budget.Rate)
     T.Budget.Hours = x.Budget.Hours + y.Budget.Hours
-    T.Budget.Dollars = x.Budget.Dollars + y.Budget.Dollars
+    
+    T.Budget.QuotedDollars_ENG = x.Budget.QuotedDollars_ENG + y.Budget.QuotedDollars_ENG;
+    T.Budget.QuotedDollars_HDWR = x.Budget.QuotedDollars_HDWR + y.Budget.QuotedDollars_HDWR;
+    T.Budget.QuotedDollars_RESALE = x.Budget.QuotedDollars_RESALE + y.Budget.QuotedDollars_RESALE;
+    T.Budget.Var_ENG = x.Budget.Var_ENG + y.Budget.Var_ENG;
+    T.Budget.Var_HDWR = x.Budget.Var_HDWR + y.Budget.Var_HDWR;
+    T.Budget.Var_RESALE = x.Budget.Var_RESALE + y.Budget.Var_RESALE;
+
     T.Budget.TravelDollars = x.Budget.TravelDollars + y.Budget.TravelDollars
 
     T.ActualHours = x.ActualHours + y.ActualHours
@@ -188,22 +195,28 @@ function _TeamBuilder(x::TeamLabor, y::DisciplineLabor)
 
     [push!(x.Projects, y.Projects[i]) for i in 1:length(y.Projects) if y.Projects[i] ∉ x.Projects];
 
-    T.Name = x.Name * " & " * y.Name
-    T.Budget.Rate = mean(x.Budget.Rate, y.Budget.Rate)
-    T.Budget.Hours = x.Budget.Hours + y.Budget.Hours
-    T.Budget.Dollars = x.Budget.Dollars + y.Budget.Dollars
-    T.Budget.TravelDollars = x.Budget.TravelDollars + y.Budget.TravelDollars
-    T.ActualHours = x.ActualHours + y.ActualHours
-    T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost
+    T.Name = x.Name * " & " * y.Name;
+    T.Budget.Rate = mean(x.Budget.Rate, y.Budget.Rate);
+    T.Budget.Hours = x.Budget.Hours + y.Budget.Hours;
+    T.Budget.QuotedDollars_ENG = x.Budget.QuotedDollars_ENG + y.Budget.QuotedDollars_ENG;
+    T.Budget.QuotedDollars_HDWR = x.Budget.QuotedDollars_HDWR + y.Budget.QuotedDollars_HDWR;
+    T.Budget.QuotedDollars_RESALE = x.Budget.QuotedDollars_RESALE + y.Budget.QuotedDollars_RESALE;
+    T.Budget.Var_ENG = x.Budget.Var_ENG + y.Budget.Var_ENG;
+    T.Budget.Var_HDWR = x.Budget.Var_HDWR + y.Budget.Var_HDWR;
+    T.Budget.Var_RESALE = x.Budget.Var_RESALE + y.Budget.Var_RESALE;
 
-    T.FwdHoursForecast = vcat(x.FwdHoursForecast, y.FwdHoursForecast)
-    T.RevHoursForecast = vcat(x.RevHoursForecast, y.RevHoursForecast)
+    T.Budget.TravelDollars = x.Budget.TravelDollars + y.Budget.TravelDollars;
+    T.ActualHours = x.ActualHours + y.ActualHours;
+    T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost;
 
-    T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast
-    T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast
+    T.FwdHoursForecast = vcat(x.FwdHoursForecast, y.FwdHoursForecast);
+    T.RevHoursForecast = vcat(x.RevHoursForecast, y.RevHoursForecast);
 
-    T.RevActualHours = vcat(x.RevActualHours, y.RevActualHours)
-    T.RevActualCostHours = x.RevActualCostHours + y.RevActualCostHours
+    T.FwdCostsForecast = x.FwdCostsForecast + y.FwdCostsForecast;
+    T.RevCostsForecast = x.RevCostsForecast + y.RevCostsForecast;
+
+    T.RevActualHours = vcat(x.RevActualHours, y.RevActualHours);
+    T.RevActualCostHours = x.RevActualCostHours + y.RevActualCostHours;
     
 
 
@@ -727,7 +740,7 @@ Function to return  cost data relative to a given project number and department.
 
 
 """
-function _getCostTrackerFromDf(df::DataFrame, Pnumber::Int, Dept::String)
+function _getCostTrackerFromDf(df::DataFrame, Pnumber::String, Dept::String)
 
     if Dept == "430300"
         strC = "CONT"
@@ -735,7 +748,7 @@ function _getCostTrackerFromDf(df::DataFrame, Pnumber::Int, Dept::String)
         strM = "MECH"
     end
 
-    filter = ((df."Project Definition").==Pnumber) .& (occursin.(strC, df."Sub - product line"))
+    filter = ((df."Project Definition").== Pnumber) .& (occursin.(strC, df."Sub - product line"))
     df = df[filter,:]
     
 
@@ -745,7 +758,7 @@ end
 
 
 
-function fetchAndWriteProjectFinances!(df::DataFrame, Pnumber::Int, Dept::String, p::Project)
+function fetchAndWriteProjectFinances!(df::DataFrame, Pnumber::String, Dept::String, p::Project)
 
     df2 = _getCostTrackerFromDf(df, Pnumber, Dept); #get cost data for project relative to department and project number
 

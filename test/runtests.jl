@@ -3,20 +3,26 @@ using DataFrames
 using Test
 using CSV
 
-dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
-# dflabor = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_PLANNED_FWD24_NOV.csv"); 
-dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
-# dfAvail = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\UTILREPORT_FWD_NOV.csv");
-dfRev = ReadLaborTracker("src\\TEAM_ACTUALPLAN_REV18.csv"); 
-# dfRev = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_ACTUALPLAN_REV18.csv"); 
+# dflabor = ReadLaborTracker("src\\TEAM_PLANNED_FWD24.csv"); 
+dflabor = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_PLANNED_FWD24_NOV.csv"); 
+# dfAvail = ReadAvailHours("src\\UTILREPORT_FWD_NOV.csv");
+dfAvail = ReadAvailHours("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\UTILREPORT_FWD_NOV.csv");
+# dfRev = ReadLaborTracker("src\\TEAM_ACTUALPLAN_REV18.csv"); 
+dfRev = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Programming\\Projects\\ResourceManagement.jl\\src\\TEAM_ACTUALPLAN_REV18.csv"); 
 
 
 dfcost = ReadCostTracker("src\\costracker.csv");
 ## costs
 p149529 = Project();
-fetchAndWriteProjectFinances!(dfcost, 149529, "430300", p149529);
+fetchAndWriteProjectFinances!(dfcost, "149529", "430300", p149529);
 
-dfcost2 = CSV.read("src\\costracker.csv", DataFrame)
+p150547 = Project();
+fetchAndWriteProjectFinances!(dfcost, "150547", "430300", p150547);
+
+p158070 = Project();
+fetchAndWriteProjectFinances!(dfcost, "158070", "430300", p158070);
+
+# dfcost2 = CSV.read("src\\costracker.csv", DataFrame)
 
 A = DisciplineLabor();
 B = DisciplineLabor();

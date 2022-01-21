@@ -85,6 +85,8 @@ function ReadCostTracker(fName::String)
         sum(occursin.("," , df.Var)) > 0 ? df.Var = replace.(df.Var, "," => "") : ();
         df.Var = parse.(Float64, df.Var);
     end
+    # convert df.:"Project Definition"  Column from Int to String type
+    df.:"Project Definition" = string.(df.:"Project Definition");
     
 
     return df;
