@@ -35,8 +35,6 @@ using .Utils: vec_to_dic
 using .Utils: ReadCostTracker
 
 
-include("MacrosUtils.jl");
-using .MacrosUtils: @prettyPrint
 
 # exports
 export DisciplineLabor, TeamLabor, Cost, Budget, Project, Program
@@ -59,8 +57,9 @@ export TeamDump
 export ReadCostTracker
 export fetchAndWriteProjectFinances!
 
+
 # export Macros
-export @prettyPrint
+# export @prettyPrint
 
 
 
@@ -829,6 +828,17 @@ function _ProgramBuilder(p1::Project, p2::Project)
 
     return p
 end
+
+
+
+
+
+
+
+
+
+
+
 
 
 
