@@ -142,20 +142,14 @@ function _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
     [push!(T.Projects, y.Projects[i]) for i in 1:length(y.Projects) if y.Projects[i] ∉ T.Projects];
 
     T.Name = x.Name * " & " * y.Name
-    T.Budget.Rate = Statistics.mean(x.Budget.Rate, y.Budget.Rate)
-    T.Budget.Hours = x.Budget.Hours + y.Budget.Hours
     
-    T.Budget.QuotedDollars_ENG = x.Budget.QuotedDollars_ENG + y.Budget.QuotedDollars_ENG;
-    T.Budget.QuotedDollars_HDWR = x.Budget.QuotedDollars_HDWR + y.Budget.QuotedDollars_HDWR;
-    T.Budget.QuotedDollars_RESALE = x.Budget.QuotedDollars_RESALE + y.Budget.QuotedDollars_RESALE;
-    T.Budget.Var_ENG = x.Budget.Var_ENG + y.Budget.Var_ENG;
-    T.Budget.Var_HDWR = x.Budget.Var_HDWR + y.Budget.Var_HDWR;
-    T.Budget.Var_RESALE = x.Budget.Var_RESALE + y.Budget.Var_RESALE;
+    
+    
+    
 
-    T.Budget.TravelDollars = x.Budget.TravelDollars + y.Budget.TravelDollars
+    
 
-    T.ActualHours = x.ActualHours + y.ActualHours
-    T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost
+    
 
     T.FwdHoursAvailable = x.FwdHoursAvailable + y.FwdHoursAvailable
     T.RevHoursAvailable = x.RevHoursAvailable + y.RevHoursAvailable
@@ -199,18 +193,9 @@ function _TeamBuilder(x::TeamLabor, y::DisciplineLabor)
     [push!(x.Projects, y.Projects[i]) for i in 1:length(y.Projects) if y.Projects[i] ∉ x.Projects];
 
     T.Name = x.Name * " & " * y.Name;
-    T.Budget.Rate = mean(x.Budget.Rate, y.Budget.Rate);
-    T.Budget.Hours = x.Budget.Hours + y.Budget.Hours;
-    T.Budget.QuotedDollars_ENG = x.Budget.QuotedDollars_ENG + y.Budget.QuotedDollars_ENG;
-    T.Budget.QuotedDollars_HDWR = x.Budget.QuotedDollars_HDWR + y.Budget.QuotedDollars_HDWR;
-    T.Budget.QuotedDollars_RESALE = x.Budget.QuotedDollars_RESALE + y.Budget.QuotedDollars_RESALE;
-    T.Budget.Var_ENG = x.Budget.Var_ENG + y.Budget.Var_ENG;
-    T.Budget.Var_HDWR = x.Budget.Var_HDWR + y.Budget.Var_HDWR;
-    T.Budget.Var_RESALE = x.Budget.Var_RESALE + y.Budget.Var_RESALE;
+    
 
-    T.Budget.TravelDollars = x.Budget.TravelDollars + y.Budget.TravelDollars;
-    T.ActualHours = x.ActualHours + y.ActualHours;
-    T.ActualIncurredCost = x.ActualIncurredCost + y.ActualIncurredCost;
+    
 
     T.FwdHoursForecast = vcat(x.FwdHoursForecast, y.FwdHoursForecast);
     T.RevHoursForecast = vcat(x.RevHoursForecast, y.RevHoursForecast);
@@ -311,7 +296,7 @@ then each row will have a vector of hours for each project. Hours are summed for
 # v: Vector of vectors
 
 """
-function _getEmployeeHoursFromDf(df::DataFrame, name::String, m::Int, col::Symbol)
+function _getEmployeeHoursFromDf(df::DataFrame, name::String, col::Symbol, m::Int=24)
 
     if col == :plan
         startcol = 9 #this matchs for both Fwd and Rev Sap Report
@@ -361,13 +346,10 @@ function _pad_zerosEnd(v, n)
 end
 
 
+function fetchAndWritePlannedHours!(df::DataFrame, name::String, D::DisciplineLabor, target::Symbol, m::Int=24)
 
-
-
-
-function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::LaborVariable, target::Symbol)
-
-    df2 = _getEmployeeHoursFromDf(df, name, m, :plan)
+    df2 = _getEmployeeHoursFromDf(df, name, :plan, m)
+    rename!(df2, names(df2) .=> names(D.FwdHoursForecast))
     
     try
         
@@ -377,7 +359,7 @@ function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::Labo
     end
 
     if target == :fwd
-        D.FwdHoursForecast = copy(df2)
+        append!(D.FwdHoursForecast, df2, cols = :intersect);
     elseif target == :rev
         D.RevHoursForecast = copy(df2)
     end
@@ -386,6 +368,11 @@ function fetchAndWritePlannedHours!(df::DataFrame, name::String, m::Int, D::Labo
     
     return D
 end
+
+
+
+
+
 
 
 

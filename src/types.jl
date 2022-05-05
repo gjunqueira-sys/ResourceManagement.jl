@@ -156,15 +156,9 @@ end
 """
 mutable struct  DisciplineLabor <:LaborVariable 
 
-    Budget::Budget  # Budget for the resource
-
-    ActualHours::Real          # Total Incurred Hours
-    ActualIncurredCost::Real    # Total Incurred Cost
-
-
     FwdHoursAvailable::Array        # Fwd Hours Available on a given month.
     FwdHoursForecast::DataFrame         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.   
-    RevHoursForecast::DataFrame          # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted. 
+    RevHoursForecast::DataFrame           # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted. 
     RevHoursAvailable::Array        # Array holding Hours Available Rev monthly (in past). Element [1] is the first month forecasted.     
 
     FwdCostsForecast::Array          # Array holding costs Forecasted Fwd monthly (future)
@@ -199,19 +193,39 @@ mutable struct  DisciplineLabor <:LaborVariable
 
     ```
     """
-    function DisciplineLabor()      # standard constructor supplied, all zerors, with 12 months array as default 
+    function DisciplineLabor()      # standard constructor supplied, all zerors, with 24 months array as default 
 
 
         
-        new(Budget(), 0.0, 0.0, Array{Float64, 1}(), DataFrame(), DataFrame(), Array{Float64, 2}(undef, 12, 12),  Array{Float64, 2}(undef, 12, 12), Array{Float64, 2}(undef, 12,12) ,
-        DataFrame(), Array{Float64, 2}(undef, 12, 12), "430300","", Array{String, 1}())
+        new(Array{Float64, 1}(), DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+        Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+        Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+        Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+        Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+        Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}())
+        ,
+         DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+         Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+            Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+            Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+            Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+            Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}())
+         , Array{Float64, 2}(undef, 24, 24),  Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24,24) ,
+        DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+        Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+           Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+           Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+           Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+           Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}())
+           , Array{Float64, 2}(undef, 24, 24), "430300","", Array{String, 1}())
 
 
     end
 
 
+
     """
-        DisciplineLabor(Dept,Name, N) 
+        DisciplineLabor(Dept,Name) 
 
     Standard Constructor for Discipline Labor'
 
@@ -235,10 +249,37 @@ mutable struct  DisciplineLabor <:LaborVariable
 
     ```
     """
-    function DisciplineLabor(Dept::String, Name::String, N::Int)     # Constructor that can specify number of months for Fwd and Rev Forecasts and also Dept
-        new(Budget(), 0.0, 0.0, Array{Float64, 1}(),  DataFrame(),  DataFrame(),  Array{Float64, 2}(undef, N, N), Array{Float64, 2}(undef, N,N), Array{Float64, 2}(undef, N,N),
-        DataFrame(), Array{Float64, 2}(undef, N,N), Dept, Name, Array{String, 1}())
+    function DisciplineLabor(Dept::String, Name::String)      # standard constructor supplied, all zerors, with 24 months array as default 
+
+
+        
+        new(Array{Float64, 1}(), DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+        Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+        Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+        Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+        Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+        Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}())
+        ,
+         DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+         Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+            Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+            Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+            Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+            Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}())
+         , Array{Float64, 2}(undef, 24, 24),  Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24,24) ,
+        DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+        Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+           Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+           Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+           Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+           Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}())
+           , Array{Float64, 2}(undef, 24, 24), Dept,Name, Array{String, 1}())
+
+
     end
+
+
+
 
 
 end
@@ -281,10 +322,9 @@ mutable struct  TeamLabor <:LaborVariable
     Name::String # name of team
     Dept::String                        # Department for Discipline
     
-    Budget::Budget  # Budget for the Object
+    
 
-    ActualHours::Real            # Total Incurred Hours
-    ActualIncurredCost::Real     # Total Incurred Cost
+    
     Projects::Array # project name
     FwdHoursAvailable::Array        # Fwd Hours Available on a given month.
     FwdHoursForecast::DataFrame        # DataFrame holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.  
@@ -296,8 +336,28 @@ mutable struct  TeamLabor <:LaborVariable
     RevActualCostHours::Array     # Array holding Hours in Dollar Amounts incurred Rev monthly (in past)
     
     function TeamLabor()
-        new(Array{DisciplineLabor, 1}(),  "", "",Budget(), 0.0, 0.0, Array{String, 1}(),Array{Float64, 1}(undef, 24), DataFrame(),
-        DataFrame(), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24, 24), DataFrame(), Array{Float64, 2}(undef, 24, 24))
+        new(Array{DisciplineLabor, 1}(),  "", "", Array{String, 1}(),
+        Array{Float64, 1}(), DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+        Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+        Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+        Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+        Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+        Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}())
+        ,
+         DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+         Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+            Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+            Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+            Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+            Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}())
+         , Array{Float64, 2}(undef, 24, 24),  Array{Float64, 2}(undef, 24, 24), Array{Float64, 2}(undef, 24,24) ,
+        DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+        Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+           Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+           Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+           Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+           Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}())
+           , Array{Float64, 2}(undef, 24, 24))
     end
 
 
