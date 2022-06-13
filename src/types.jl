@@ -99,9 +99,19 @@ mutable struct Project <: ProjectVariable
     FwdHoursForecast::DataFrame         # Array holding Hours Forecasted Fwd monthly(future). Element [1] is the first month forecasted.   
     RevHoursForecast::DataFrame          # Array holding Hours Forecasted Rev monthly (in past). Element [1] is the first month forecasted.
 
-    function Project() # Standard Constructor Function
+    function Project(project::String, customer::String) # Standard Constructor Function
 
-        new("", "", Array{Budget, 1}(), Array{Cost, 1}(), DataFrame(), DataFrame());
+        new(project, customer, Array{Budget, 1}(), Array{Cost, 1}(), DataFrame(Employee=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+        Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+        Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+        Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+        Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+        Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}()), DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
+        Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
+        Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),
+        Month13 = Array{Int64, 1}(), Month14 = Array{Int64, 1}(), Month15 = Array{Int64, 1}(), Month16 = Array{Int64, 1}(), Month17 = Array{Int64, 1}(),
+        Month18 = Array{Int64, 1}(), Month19 = Array{Int64, 1}(), Month20 = Array{Int64, 1}(), Month21 = Array{Int64, 1}(), Month22 = Array{Int64, 1}(),
+        Month23 = Array{Int64, 1}(), Month24 = Array{Int64, 1}()));
         
     end
 

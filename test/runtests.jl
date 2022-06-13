@@ -12,25 +12,26 @@ dfRev = ReadLaborTracker("C:\\Users\\junqueg\\Documents\\My Documents\\15. Progr
 
 
 dfcost = ReadCostTracker("src\\costracker.csv");
+dfcostnew =  ReadCostTracker("src\\costracker_0606.csv");
 ## costs
-p149529 = Project();
+p149529 = Project("149529", "Walmart");
 fetchAndWriteProjectFinances!(dfcost, "149529", "430300", p149529)
 
-p150547 = Project();
+p150547 = Project("150547", "Richemont");
 fetchAndWriteProjectFinances!(dfcost, "150547", "430300", p150547)
 
-p158070 = Project();
+p158070 = Project("158070", "Walmart");
 fetchAndWriteProjectFinances!(dfcost, "158070", "430300", p158070)
 
 
-p152242 = Project();
+p152242 = Project("152242", "Amazon");
 fetchAndWriteProjectFinances!(dfcost, "152242", "430300", p152242)
 
-p152385 = Project();
+p152385 = Project("152385", "Glazers");
 fetchAndWriteProjectFinances!(dfcost, "152385", "430300", p152385)
 
-p154662 = Project()
-fetchAndWriteProjectFinances!(dfcost, "154662", "430300", p154662)
+p154662 = Project("154662", "Burlington")
+fetchAndWriteProjectFinances!(dfcostnew, "154662", "430300", p154662)
 
 # dfcost2 = CSV.read("src\\costracker.csv", DataFrame)
 

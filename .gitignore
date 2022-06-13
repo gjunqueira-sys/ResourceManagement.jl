@@ -31,6 +31,8 @@ Manifest.toml
 *.XLS
 *.XLSX
 *.CSV
-
+*.csv
+*.xls
+*.xlsx
 
 .fake

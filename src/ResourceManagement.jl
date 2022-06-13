@@ -56,6 +56,9 @@ export dic_to_vec, vec_to_dic
 export TeamDump
 export ReadCostTracker
 export fetchAndWriteProjectFinances!
+export fetchAndWritePlannedProjHours!
+export getProjectCostItem
+export _tranfProjToDisciplineDf
 
 
 # export Macros
@@ -791,6 +794,166 @@ function fetchAndWriteProjectFinances!(df::DataFrame, Pnumber::String, Dept::Str
     return p
     
 end
+
+
+function fetchAndWritePlannedProjHours!(df::DataFrame, p::Project, target::Symbol)
+
+    
+    
+    dfp = df[:, 7:end] #select columns
+    s =map(s -> occursin("Forecast", s), names(dfp)) #select columns containing "forecast" to be eliminated
+    columns = map(v -> !v , s) #invert select to NOT select forecast columns
+    dfp = dfp[:, columns] #select columns
+    rename!(dfp, names(dfp) .=> names(p.FwdHoursForecast))
+    
+    
+
+    if target == :fwd
+        append!(p.FwdHoursForecast, dfp, cols = :intersect);
+    elseif target == :rev
+        p.RevHoursForecast = copy(df)
+    end
+    
+   
+    
+    return p
+end
+
+
+
+
+function _tranfProjToDisciplineDf(p::Project, d::DisciplineLabor , name::String)
+
+    df = filter(:Employee  => x  -> x  == name, p.FwdHoursForecast)
+
+    dfw = df[:, 2:end] #subset  months FwdHoursForecast
+
+    dfn = DataFrame(:Project => [p.Number]) #prepare dataframe with project number to insert into dfw
+
+    dff = hcat(dfn, dfw) #concatenate project number and FwdHoursForecast
+
+    _updateDisciplineProjNumber(p, d) #update project lists
+
+
+    return append!(d.FwdHoursForecast, dff)
+
+
+end
+
+
+function _updateDisciplineProjNumber(p::Project, d::DisciplineLabor)
+
+    if (p.Number ∉  d.Projects)
+        push!(d.Projects, p.Number)
+    end
+    
+    
+end
+
+
+
+
+
+function getProjectCostItem(p::Project, item::Symbol)
+
+    if item == :Actual_ENG
+        return p.Cost[1].Actual_ENG
+
+    elseif item == :Anticipated_ENG
+        return p.Cost[1].Anticipated_ENG
+        
+    elseif item == :Projected_ENG
+        return p.Cost[1].Projected_ENG
+
+    elseif item == :Actual_RESALE
+        return p.Cost[1].Actual_RESALE
+
+    elseif item == :Anticipated_RESALE
+        return p.Cost[1].Anticipated_RESALE
+
+    elseif item == :Projected_RESALE
+        return p.Cost[1].Projected_RESALE
+
+    elseif item == :Actual_HDWR
+        return p.Cost[1].Actual_HDWR
+
+    elseif item == :Anticipated_HDWR
+        return p.Cost[1].Anticipated_HDWR
+
+    elseif item == :Projected_HDWR
+        return p.Cost[1].Projected_HDWR
+
+    else 
+        return println("Invalid Cost Item")
+    end
+
+    
+end
+
+
+
+
+"""
+    getProjectNumbers(D::DisciplineLabor)
+
+Functin that returns Project Numbers for a given Discipline. 
+    This is multiple-dispatch function
+
+Arguments:
+- `D::DisciplineLabor`: DisciplineLabor object
+
+Returns:
+- Array of Strings with Project Numbers
+
+"""
+function getProjectNumbers(D::DisciplineLabor)
+
+    return D.Projects #return array of strings with project numbers
+
+
+end
+
+"""
+    getProjectNumbers(D::DisciplineLabor)
+
+Functin that returns Project Numbers for a given Discipline. 
+    This is multiple-dispatch function
+
+Arguments:
+- `p::Project`: Project object
+
+Returns:
+- Array of Strings with Project Numbers
+
+"""
+function getProjectNumbers(p::Project)
+
+    projects = []; 
+    push!(projects, p.Number);
+    return projects;
+
+end
+
+"""
+    getProjectNumbers(D::DisciplineLabor)
+
+Functin that returns Project Numbers for a given Discipline. 
+    This is multiple-dispatch function
+
+Arguments:
+- `t::TeamLabor `: TeamLabor object
+
+Returns:
+- Array of Strings with Project Numbers
+
+"""
+function getProjectNumbers(t::TeamLabor)
+
+    return t.Projects
+
+end
+
+
 
 
 
