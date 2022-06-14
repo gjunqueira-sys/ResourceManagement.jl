@@ -331,7 +331,7 @@ mutable struct  TeamLabor <:LaborVariable
     Team::Array{DisciplineLabor, 1}
     Name::String # name of team
     Dept::String                        # Department for Discipline
-    
+    Employees::Array{String, 1}        # Array of Employees in the team
     
 
     
@@ -346,7 +346,7 @@ mutable struct  TeamLabor <:LaborVariable
     RevActualCostHours::Array     # Array holding Hours in Dollar Amounts incurred Rev monthly (in past)
     
     function TeamLabor()
-        new(Array{DisciplineLabor, 1}(),  "", "", Array{String, 1}(),
+        new(Array{DisciplineLabor, 1}(),  "", "", Array{String, 1}(),Array{String, 1}(),
         Array{Float64, 1}(), DataFrame(Project=  Array{String,1}(), Month1 = Array{Int64, 1}(), Month2 = Array{Int64, 1}(), Month3 = Array{Int64, 1}(),
         Month4 = Array{Int64, 1}(), Month5 = Array{Int64, 1}(), Month6 = Array{Int64, 1}(), Month7 = Array{Int64, 1}(), Month8 = Array{Int64, 1}(),
         Month9 = Array{Int64, 1}(), Month10 = Array{Int64, 1}(), Month11 = Array{Int64, 1}(), Month12 = Array{Int64, 1}(),

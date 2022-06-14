@@ -145,6 +145,14 @@ function _TeamBuilder(x::DisciplineLabor, y::DisciplineLabor)
     [push!(T.Projects, y.Projects[i]) for i in 1:length(y.Projects) if y.Projects[i] ∉ T.Projects];
 
     T.Name = x.Name * " & " * y.Name
+
+    if x.Name ∉ T.Employees
+        push!(T.Employees, x.Name)
+    end
+
+    if y.Name ∉ T.Employees
+        push!(T.Employees, y.Name)
+    end
     
     
     
@@ -197,7 +205,9 @@ function _TeamBuilder(x::TeamLabor, y::DisciplineLabor)
 
     T.Name = x.Name * " & " * y.Name;
     
-
+    if y.Name ∉ x.Employees
+        push!(x.Employees, y.Name)
+    end
     
 
     T.FwdHoursForecast = vcat(x.FwdHoursForecast, y.FwdHoursForecast);
@@ -890,8 +900,7 @@ function getProjectCostItem(p::Project, item::Symbol)
     
 end
 
-
-
+################################# Project numbers - Multiple Dispatch Functions
 
 """
     getProjectNumbers(D::DisciplineLabor)
@@ -954,7 +963,7 @@ function getProjectNumbers(t::TeamLabor)
 end
 
 
-
+###############################################################################
 
 
 """
