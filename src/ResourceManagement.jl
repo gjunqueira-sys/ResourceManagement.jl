@@ -63,6 +63,9 @@ export _prepProjectTableBeforeWrite
 export getNamedResources
 export getProjectNumbers
 export loadProject
+export _updateResourceProjNumber
+export _tranfProjToResourceDf
+
 
 
 
