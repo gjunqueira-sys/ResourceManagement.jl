@@ -58,7 +58,12 @@ export ReadCostTracker
 export fetchAndWriteProjectFinances!
 export fetchAndWritePlannedProjHours!
 export getProjectCostItem
-export _tranfProjToDisciplineDf
+export _tranfProjToResourceDf
+export _prepProjectTableBeforeWrite
+export getNamedResources
+export getProjectNumbers
+export loadProject
+
 
 
 # export Macros
@@ -683,8 +688,7 @@ Function to iterate over all Team Resources and output `target` field as Dict pa
         Keys are Employee names
         Values are Dict of `target` field
 """
-function TeamDump(Team::TeamLabor, target::Symbol = :TotalFwdPlannedHours)
-    dict = Dict()
+function TeamDump(Team::TeamLabor, target::Symbol = :TotalFwdPlannedHours)  # TODO: this function is not working anymore
     v_nam=[] #vector of names
     v_vals=[] #vector of values
 
@@ -808,9 +812,11 @@ end
 
 function fetchAndWritePlannedProjHours!(df::DataFrame, p::Project, target::Symbol)
 
+
+    df1 = filter(:Project => x -> x .== parse(Int64, p.Number), df)
     
     
-    dfp = df[:, 7:end] #select columns
+    dfp = df1[:, 7:end] #select columns
     s =map(s -> occursin("Forecast", s), names(dfp)) #select columns containing "forecast" to be eliminated
     columns = map(v -> !v , s) #invert select to NOT select forecast columns
     dfp = dfp[:, columns] #select columns
@@ -830,19 +836,13 @@ function fetchAndWritePlannedProjHours!(df::DataFrame, p::Project, target::Symbo
 end
 
 
+###################################################################################
 
+function _tranfProjToResourceDf(p::Project, d::DisciplineLabor , name::String)
 
-function _tranfProjToDisciplineDf(p::Project, d::DisciplineLabor , name::String)
+   dff = _prepProjectTableBeforeWrite(p, name);
 
-    df = filter(:Employee  => x  -> x  == name, p.FwdHoursForecast)
-
-    dfw = df[:, 2:end] #subset  months FwdHoursForecast
-
-    dfn = DataFrame(:Project => [p.Number]) #prepare dataframe with project number to insert into dfw
-
-    dff = hcat(dfn, dfw) #concatenate project number and FwdHoursForecast
-
-    _updateDisciplineProjNumber(p, d) #update project lists
+    _updateResourceProjNumber(p, d) #update project lists
 
 
     return append!(d.FwdHoursForecast, dff)
@@ -851,7 +851,37 @@ function _tranfProjToDisciplineDf(p::Project, d::DisciplineLabor , name::String)
 end
 
 
-function _updateDisciplineProjNumber(p::Project, d::DisciplineLabor)
+function _tranfProjToResourceDf(p::Project, t::TeamLabor , name::String)
+
+    dff = _prepProjectTableBeforeWrite(p, name);
+ 
+     _updateResourceProjNumber(p, t) #update project lists
+ 
+ 
+     return append!(t.FwdHoursForecast, dff)
+ 
+ 
+ end
+
+ ##########################################################################
+
+
+
+function _prepProjectTableBeforeWrite(p::Project, name::String)
+
+    df = filter(:Employee  => x  -> x  == name, p.FwdHoursForecast)
+    dfw = df[:, 2:end] #subset  months FwdHoursForecast
+    dfn = DataFrame(:Project => [p.Number]) #prepare dataframe with project number to insert into dfw
+    dff = hcat(dfn, dfw) #concatenate project number and FwdHoursForecast
+
+    return dff
+
+end
+
+###################################################################################
+
+
+function _updateResourceProjNumber(p::Project, d::DisciplineLabor)
 
     if (p.Number ∉  d.Projects)
         push!(d.Projects, p.Number)
@@ -859,6 +889,27 @@ function _updateDisciplineProjNumber(p::Project, d::DisciplineLabor)
     
     
 end
+
+
+
+function _updateResourceProjNumber(p::Project, t::TeamLabor)
+
+    if (p.Number ∉  t.Projects)
+        push!(t.Projects, p.Number)
+    end
+    
+    
+end
+
+
+###################################################################################
+
+
+
+
+
+
+
 
 
 
@@ -964,6 +1015,62 @@ end
 
 
 ###############################################################################
+
+
+function getNamedResources(d::DisciplineLabor)
+
+    names = [];
+    push!(names, d.Name);
+
+    return names
+
+end
+
+
+
+function getNamedResources(t::TeamLabor)
+    return t.Employees
+
+end
+
+
+function getNamedResources(p::Project)
+
+    
+    nams = [nams for nams in p.FwdHoursForecast.Employee];
+    return nams
+        
+end
+
+
+
+###############################################################################
+
+
+
+
+function loadProject(p::Project, t::TeamLabor)
+
+    pNams = getNamedResources(p);
+    tNams = getNamedResources(t);
+
+    for ProjNams in pNams
+        
+        if ProjNams ∉ tNams
+            
+            push!(t.Employees, ProjNams);
+            _tranfProjToResourceDf(p, t , ProjNams)  # update team labor
+
+        end
+
+    end
+
+
+
+end
+
+
+
 
 
 """
